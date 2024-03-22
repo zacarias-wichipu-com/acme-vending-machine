@@ -1,0 +1,5 @@
+imports:
+    - {resource: ../../../../apps/shared/config/packages/cache.yaml}
+    - {resource: ../../../../apps/shared/config/packages/framework.yaml}
+    - {resource: ../../../../apps/shared/config/packages/messenger.yaml}
+    - {resource: ../../../../apps/shared/config/packages/validator.yaml}

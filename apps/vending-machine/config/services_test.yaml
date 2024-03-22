@@ -1,0 +1,2 @@
+imports:
+    - {resource: ../../../apps/shared/config/services_test.yaml}

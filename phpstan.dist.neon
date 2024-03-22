@@ -1,0 +1,14 @@
+parameters:
+    level: 8
+    paths:
+        - bin/
+        - apps/
+        - src/
+        - tests/
+    excludePaths:
+        analyse:
+            - tests/bootstrap.php
+    symfony:
+        containerXmlPath: var/cache/head/dev/App_Apps_Head_KernelDevDebugContainer.xml
+    doctrine:
+        objectManagerLoader: etc/phpstan/object-manager.php

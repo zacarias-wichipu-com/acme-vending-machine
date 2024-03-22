@@ -1,0 +1,9 @@
+services:
+    php:
+        container_name: php
+        user: "${USER_ID}:${GROUP_ID}"
+        build:
+            context: .
+        restart: unless-stopped
+        volumes:
+            - .:/app:delegated

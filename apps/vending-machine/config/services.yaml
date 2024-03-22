@@ -1,0 +1,13 @@
+imports:
+    - {resource: ../../../apps/shared/config/services.yaml}
+parameters:
+    app.root_path: '../../..'
+    app.app_path: '/apps/vending-machine'
+    app.app_path_from_root: '%app.root_path%%app.app_path%'
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    Acme\Ui\Cli\:
+        resource: '%app.app_path_from_root%/src/'
+        exclude: '%app.app_path_from_root%/src/{Entity/,Controller/,Migrations/,DependencyInjection/,Kernel.php}'

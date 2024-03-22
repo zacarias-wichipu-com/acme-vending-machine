@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<psalm
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://getpsalm.org/schema/config"
+        xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+        errorLevel="2"
+        findUnusedBaselineEntry="false"
+        findUnusedCode="true"
+        allowStringToStandInForClass="true"
+        errorBaseline="psalm-baseline.xml"
+>
+    <projectFiles>
+        <directory name="apps"/>
+        <directory name="src"/>
+        <directory name="tests"/>
+        <ignoreFiles>
+            <file name="tests/bootstrap.php"/>
+            <directory name="var"/>
+            <directory name="vendor"/>
+            <directory name="apps/head/src/Migrations"/>
+            <!-- @ToDo: ZCL@20240311: Ignore paths until add some related business logic. -->
+            <directory name="src/Things"/>
+            <!-- @ToDo: ZCL@20240311: Ignore paths until add some related business logic. -->
+            <directory name="src/Shared"/>
+            <!-- @ToDo: ZCL@20240311: Ignore paths until add some related business logic. -->
+            <directory name="tests/src/Shared"/>
+        </ignoreFiles>
+    </projectFiles>
+    <plugins>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
+            <containerXml>var/cache/api/dev/App_Apps_API_KernelDevDebugContainer.xml</containerXml>
+        </pluginClass>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
+</psalm>
