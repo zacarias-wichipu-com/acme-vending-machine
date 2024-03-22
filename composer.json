@@ -26,7 +26,6 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "symfony/web-profiler-bundle": "^7",
     "phpunit/phpunit": "^10",
     "fakerphp/faker": "^1",
     "rector/rector": "^0.19.2",

@@ -95,7 +95,7 @@ tests: composer-env-file u-tests i-tests ## ✅  All tests
 .PHONY: cache-clear
 cache-clear: ##   Clears symfony cache
 	@echo "${INFO_PROMPT_INIT}Clearing cache...${INFO_PROMPT_END}"
-	@docker run --rm $(INTERACTIVE) --volume $(CURRENT_DIR):/app --user $(id -u):$(id -g) \
+	@docker run --rm -t --volume $(CURRENT_DIR):/app --user $(id -u):$(id -g) \
 		composer:2 run post-install-cmd
 
 .PHONY: xdebug-enable
