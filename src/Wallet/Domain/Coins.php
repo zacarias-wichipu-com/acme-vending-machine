@@ -16,6 +16,15 @@ use Override;
 final class Coins extends Collection
 {
     /**
+     * @return class-string
+     */
+    #[Override]
+    protected function type(): string
+    {
+        return CoinBox::class;
+    }
+
+    /**
      * @param  array<T>  $coinBox
      */
     public static function create(array $coinBox): static
@@ -45,12 +54,12 @@ final class Coins extends Collection
         ]);
     }
 
-    /**
-     * @return class-string
-     */
-    #[Override]
-    protected function type(): string
+    public function amount(): int
     {
-        return CoinBox::class;
+        return array_reduce(
+            array: $this->items(),
+            callback: static fn(int $amount, CoinBox $coinBox): int => $amount + $coinBox->amount(),
+            initial: 0
+        );
     }
 }
