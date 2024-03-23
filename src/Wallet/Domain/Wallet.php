@@ -18,11 +18,19 @@ final readonly class Wallet
         private Coins $customerCoins,
     ) {}
 
-    public static function createDefault(): static
+    public static function create(Coins $exchangeCoins, Coins $customerCoins): static
     {
         return new static(
+            exchangeCoins: $exchangeCoins,
+            customerCoins: $customerCoins,
+        );
+    }
+
+    public static function createDefault(): static
+    {
+        return static::create(
             exchangeCoins: Coins::createDefaultExchange(),
-            customerCoins: new Coins()
+            customerCoins: Coins::create([]),
         );
     }
 }

@@ -29,16 +29,35 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
      * It Should Be Able To Get A Default Vending Machine
      *
      * @group json_file_vending_machine_repository
+     * @group integration
      */
     public function testItShouldBeAbleToGetADefaultVendingMachine(): void
     {
         $repository = new JsonFileVendingMachineRepository();
         $repository->save(VendingMachine::createDefault());
-        $defaultVendingMachine = $repository->get();
+        $vendingMachine = $repository->get();
         $expectedDefaultVendingMachine = VendingMachineMother::defaultMachine();
         $this->assertEquals(
             expected: $expectedDefaultVendingMachine->status(),
-            actual: $defaultVendingMachine->status()
+            actual: $vendingMachine->status()
+        );
+    }
+
+    /**
+     * It Should Be Able To Get A Random Vending Machine
+     *
+     * @group json_file_vending_machine_repository
+     * @group integration
+     */
+    public function testItShouldBeAbleToGetARandomVendingMachine(): void
+    {
+        $expectedRandomVendingMachine = VendingMachineMother::randomMachine();
+        $repository = new JsonFileVendingMachineRepository();
+        $repository->save($expectedRandomVendingMachine);
+        $vendingMachine = $repository->get();
+        $this->assertEquals(
+            expected: $expectedRandomVendingMachine->status(),
+            actual: $vendingMachine->status()
         );
     }
 }

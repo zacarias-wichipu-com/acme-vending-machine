@@ -13,7 +13,7 @@ final readonly class CoinBox
         private int $quantity
     ) {}
 
-    public static function createDefault(Coin $coin, int $quantity): static
+    public static function create(Coin $coin, int $quantity): static
     {
         return new static(
             coin: $coin,

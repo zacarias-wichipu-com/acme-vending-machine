@@ -15,20 +15,28 @@ use Override;
  */
 final class Racks extends Collection
 {
+    /**
+     * @param  array<T>  $racks
+     */
+    public static function create(array $racks): static
+    {
+        return new static($racks);
+    }
+
     public static function createDefault(): static
     {
-        return new static([
-            Rack::createDefault(
+        return static::create([
+            Rack::create(
                 product: Product::createFromType(ProductType::JUICE),
                 price: 100,
                 quantity: 2
             ),
-            Rack::createDefault(
+            Rack::create(
                 product: Product::createFromType(ProductType::SODA),
                 price: 150,
                 quantity: 2
             ),
-            Rack::createDefault(
+            Rack::create(
                 product: Product::createFromType(ProductType::WATER),
                 price: 65,
                 quantity: 2

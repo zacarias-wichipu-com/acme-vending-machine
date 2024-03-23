@@ -15,22 +15,30 @@ use Override;
  */
 final class Coins extends Collection
 {
+    /**
+     * @param  array<T>  $coinBox
+     */
+    public static function create(array $coinBox): static
+    {
+        return new static($coinBox);
+    }
+
     public static function createDefaultExchange(): static
     {
-        return new static([
-            CoinBox::createDefault(
+        return static::create([
+            CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::FIVE),
                 quantity: 5
             ),
-            CoinBox::createDefault(
+            CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::TEN),
                 quantity: 3
             ),
-            CoinBox::createDefault(
+            CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::TWENTY_FIVE),
                 quantity: 2
             ),
-            CoinBox::createDefault(
+            CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::ONE_HUNDRED),
                 quantity: 1
             ),

@@ -16,8 +16,13 @@ final readonly class Store
         private Racks $racks
     ) {}
 
+    public static function create(Racks $racks): static
+    {
+        return new static(racks: $racks);
+    }
+
     public static function createDefault(): static
     {
-        return new static(racks: Racks::createDefault());
+        return static::create(racks: Racks::createDefault());
     }
 }

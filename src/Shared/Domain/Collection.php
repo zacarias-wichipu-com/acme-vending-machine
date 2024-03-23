@@ -18,7 +18,7 @@ abstract class Collection implements Countable, IteratorAggregate
     /**
      * @param  array<T>  $items
      */
-    public function __construct(private readonly array $items = [])
+    protected function __construct(private readonly array $items = [])
     {
         Assert::arrayOf($this->type(), $items);
     }

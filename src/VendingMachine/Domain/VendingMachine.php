@@ -16,9 +16,21 @@ final readonly class VendingMachine
         private Wallet $wallet,
     ) {}
 
+    public static function create(
+        Status $status,
+        Store $store,
+        Wallet $wallet,
+    ): static {
+        return new static(
+            status: $status,
+            store: $store,
+            wallet: $wallet
+        );
+    }
+
     public static function createDefault(): static
     {
-        return new static(
+        return static::create(
             status: Status::OPERATIONAL,
             store: Store::createDefault(),
             wallet: Wallet::createDefault()

@@ -14,12 +14,12 @@ final readonly class Rack
         private int $quantity,
     ) {}
 
-    public static function createDefault(Product $product, int $price, int $quantity): static
+    public static function create(Product $product, int $price, int $quantity): static
     {
         return new static(
             product: $product,
-            price: $price,
-            quantity: $quantity
+            quantity: $quantity,
+            price: $price
         );
     }
 }
