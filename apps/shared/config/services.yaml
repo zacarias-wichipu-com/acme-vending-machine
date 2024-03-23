@@ -1,2 +1,7 @@
 imports:
     - {resource: ../../../src/Shared/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}
+    - {resource: ../../../src/Coin/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}
+    - {resource: ../../../src/Product/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}
+    - {resource: ../../../src/Store/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}
+    - {resource: ../../../src/VendingMachine/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}
+    - {resource: ../../../src/Wallet/Infrastructure/Symfony/DependencyInjection/shared_services.yaml}

@@ -1,0 +1,8 @@
+parameters:
+    context.root_path: '../../../../..'
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    Acme\Shared\:
+        resource: '%context.root_path%/src/Shared/{Application,Domain,Infrastructure}/*'
