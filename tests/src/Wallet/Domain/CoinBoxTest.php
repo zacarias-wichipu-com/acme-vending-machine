@@ -21,25 +21,25 @@ class CoinBoxTest extends TestCase
      */
     public function testItShouldCalculateAmount(CoinBox $coinBox, int $amount): void
     {
-        $this->assertEquals($amount, $coinBox->amount());
+        $this->assertEquals(expected: $amount, actual: $coinBox->amount());
     }
 
     public static function calculateAmountData(): Generator
     {
         yield [
-            CoinBox::create(Coin::createFromAmountInCents(AmountInCents::FIVE), 10),
+            CoinBox::create(coin: Coin::createFromAmountInCents(AmountInCents::FIVE), quantity: 10),
             50
         ];
         yield [
-            CoinBox::create(Coin::createFromAmountInCents(AmountInCents::TEN), 10),
+            CoinBox::create(coin: Coin::createFromAmountInCents(AmountInCents::TEN), quantity: 10),
             100
         ];
         yield [
-            CoinBox::create(Coin::createFromAmountInCents(AmountInCents::TWENTY_FIVE), 2),
+            CoinBox::create(coin: Coin::createFromAmountInCents(AmountInCents::TWENTY_FIVE), quantity: 2),
             50
         ];
         yield [
-            CoinBox::create(Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED), 3),
+            CoinBox::create(coin: Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED), quantity: 3),
             300
         ];
     }
