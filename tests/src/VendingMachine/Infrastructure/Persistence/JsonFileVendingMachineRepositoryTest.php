@@ -12,6 +12,17 @@ use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestCase
 {
+    private VendingMachineRepository $repository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->repository = new JsonFileVendingMachineRepository(
+            persistenceFilePath: dirname(__DIR__).'/../../../../var/persistence/test_vending_machine.json',
+            filesystem: $this->service('filesystem'),
+        );
+    }
+
     /**
      * It Should Save A Default Vending Machine
      *
@@ -20,12 +31,8 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
      */
     public function testItShouldSaveADefaultVendingMachine(): void
     {
-        $repository = new JsonFileVendingMachineRepository(
-            persistenceFilePath: dirname(__DIR__).'/../../../../var/persistence/test_vending_machine.json',
-            filesystem: $this->service('filesystem'),
-        );
-        $repository->save(vendingMachine: VendingMachine::createDefault());
-        $this->assertInstanceOf(expected: VendingMachineRepository::class, actual: $repository);
+        $this->repository->save(vendingMachine: VendingMachine::createDefault());
+        $this->assertInstanceOf(expected: VendingMachineRepository::class, actual: $this->repository);
     }
 
     /**
@@ -36,9 +43,8 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
      */
     public function testItShouldBeAbleToGetADefaultVendingMachine(): void
     {
-        $repository = new JsonFileVendingMachineRepository();
-        $repository->save(VendingMachine::createDefault());
-        $vendingMachine = $repository->get();
+        $this->repository->save(vendingMachine: VendingMachine::createDefault());
+        $vendingMachine = $this->repository->get();
         $expectedDefaultVendingMachine = VendingMachineMother::defaultMachine();
         $this->assertEquals(
             expected: $expectedDefaultVendingMachine->status(),
@@ -55,9 +61,9 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
     public function testItShouldBeAbleToGetARandomVendingMachine(): void
     {
         $expectedRandomVendingMachine = VendingMachineMother::randomMachine();
-        $repository = new JsonFileVendingMachineRepository();
-        $repository->save($expectedRandomVendingMachine);
-        $vendingMachine = $repository->get();
+        $this->repository->save(vendingMachine: VendingMachine::createDefault());
+        $this->repository->save($expectedRandomVendingMachine);
+        $vendingMachine = $this->repository->get();
         $this->assertEquals(
             expected: [
                 $expectedRandomVendingMachine->status(),
