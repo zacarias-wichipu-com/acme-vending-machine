@@ -6,7 +6,6 @@ RUN apk --update upgrade \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     linux-headers \
     && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
     && apk del -f .build-deps
 
 RUN apk --update upgrade \
