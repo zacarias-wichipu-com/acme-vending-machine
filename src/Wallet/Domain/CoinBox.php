@@ -20,4 +20,9 @@ final readonly class CoinBox
             quantity: $quantity
         );
     }
+
+    public function amount(): int
+    {
+        return $this->coin->amount() * $this->quantity;
+    }
 }
