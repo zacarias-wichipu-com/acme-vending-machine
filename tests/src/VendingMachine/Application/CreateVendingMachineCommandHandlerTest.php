@@ -13,12 +13,12 @@ use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 class CreateVendingMachineCommandHandlerTest extends TestCase
 {
     /**
-     * Should Create A Default Vending Machine
+     * It Should Create A Default Vending Machine
      *
      * @group create_vending_machine_command_handler
      * @group unit
      */
-    public function testShouldCreateADefaultVendingMachine(): void
+    public function testItShouldCreateADefaultVendingMachine(): void
     {
         $repository = $this->createMock(VendingMachineRepository::class);
         $repository->expects($this->once())->method('save')->with(VendingMachineMother::defaultMachine());
