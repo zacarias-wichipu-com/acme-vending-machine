@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Acme\VendingMachine\Domain;
 
+use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
-use Acme\Store\Domain\WareHouse;
 use Acme\Wallet\Domain\Wallet;
 
-final readonly class VendingMachine
+final class VendingMachine extends AggregateRoot
 {
     private function __construct(
-        private Status $status,
-        private Store $store,
-        private Wallet $wallet,
+        private readonly Status $status,
+        private readonly Store $store,
+        private readonly Wallet $wallet,
     ) {}
 
     public static function create(
