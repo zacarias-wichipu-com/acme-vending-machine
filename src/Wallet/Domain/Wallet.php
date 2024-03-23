@@ -33,4 +33,9 @@ final readonly class Wallet
             customerCoins: Coins::create([]),
         );
     }
+
+    public function exchangeAmount(): int
+    {
+        return $this->exchangeCoins->amount();
+    }
 }
