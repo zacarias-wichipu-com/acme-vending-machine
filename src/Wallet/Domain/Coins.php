@@ -9,6 +9,10 @@ use Acme\Coin\Domain\Coin;
 use Acme\Shared\Domain\Collection;
 use Override;
 
+/**
+ * @template  T
+ * @extends  Collection<T>
+ */
 final class Coins extends Collection
 {
     public static function createDefaultExchange(): static

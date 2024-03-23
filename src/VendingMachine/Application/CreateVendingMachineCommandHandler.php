@@ -11,8 +11,12 @@ final readonly class CreateVendingMachineCommandHandler
 {
     public function __construct(
         private VendingMachineRepository $repository
-    ) {}
+    ) {
+    }
 
+    /**
+     * @psalm-suppress UnusedParam
+     */
     public function __invoke(CreateVendingMachineCommand $command): void
     {
         $this->repository->save(VendingMachine::createDefault());

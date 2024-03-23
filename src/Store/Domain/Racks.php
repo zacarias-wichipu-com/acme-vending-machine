@@ -9,6 +9,10 @@ use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Collection;
 use Override;
 
+/**
+ * @template  T
+ * @extends  Collection<T>
+ */
 final class Racks extends Collection
 {
     public static function createDefault(): static

@@ -24,6 +24,13 @@
             <directory name="tests/src/Shared"/>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="."/>
+            </errorLevel>
+        </UnusedProperty>
+    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
             <containerXml>var/cache/vending-machine/dev/Acme_Ui_Cli_KernelDevDebugContainer.xml</containerXml>

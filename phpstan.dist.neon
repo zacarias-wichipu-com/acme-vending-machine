@@ -10,3 +10,6 @@ parameters:
             - apps/bootstrap.php
     symfony:
         containerXmlPath: var/cache/vending-machine/dev/Acme_Ui_Cli_KernelDevDebugContainer.xml
+    ignoreErrors:
+        # ToDo: ZCL@20240323: Remove when finish the use case implementation.
+        - '#[a-zA-Z0-9\\_]+ is never read, only written.#'

@@ -10,6 +10,7 @@ final class Assert
 {
     /**
      * @param  class-string  $class
+     * @param  array<mixed>  $items
      */
     public static function arrayOf(string $class, array $items): void
     {

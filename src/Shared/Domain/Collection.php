@@ -9,11 +9,14 @@ use Countable;
 use IteratorAggregate;
 use Traversable;
 
-/** @template-implements IteratorAggregate<mixed> */
+/**
+ * @template T
+ * @template-implements IteratorAggregate<T>
+ */
 abstract class Collection implements Countable, IteratorAggregate
 {
     /**
-     * @param  array  $items
+     * @param  array<T>  $items
      */
     public function __construct(private readonly array $items = [])
     {
@@ -35,6 +38,9 @@ abstract class Collection implements Countable, IteratorAggregate
      */
     abstract protected function type(): string;
 
+    /**
+     * @return array<T>
+     */
     protected function items(): array
     {
         return $this->items;
