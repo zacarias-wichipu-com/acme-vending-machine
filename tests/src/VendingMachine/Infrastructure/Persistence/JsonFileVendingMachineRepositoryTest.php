@@ -20,9 +20,12 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
      */
     public function testItShouldSaveADefaultVendingMachine(): void
     {
-        $repository = new JsonFileVendingMachineRepository();
-        $repository->save(VendingMachine::createDefault());
-        $this->assertInstanceOf(VendingMachineRepository::class, $repository);
+        $repository = new JsonFileVendingMachineRepository(
+            persistenceFilePath: dirname(__DIR__).'/../../../../var/persistence/test_vending_machine.json',
+            filesystem: $this->service('filesystem'),
+        );
+        $repository->save(vendingMachine: VendingMachine::createDefault());
+        $this->assertInstanceOf(expected: VendingMachineRepository::class, actual: $repository);
     }
 
     /**
