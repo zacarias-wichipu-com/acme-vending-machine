@@ -14,4 +14,9 @@ final readonly class Coin
     {
         return new static(amountInCents: $amountInCents);
     }
+
+    public function amount(): int
+    {
+        return $this->amountInCents->value;
+    }
 }
