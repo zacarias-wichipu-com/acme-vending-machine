@@ -15,3 +15,7 @@ RUN apk --update upgrade \
 RUN curl -sS https://get.symfony.com/cli/installer | bash -s - --install-dir /usr/local/bin
 
 COPY etc/infrastructure/php/ /usr/local/etc/php/
+
+RUN mkdir -p /opt/home
+RUN chmod 777 /opt/home
+ENV HOME /opt/home
