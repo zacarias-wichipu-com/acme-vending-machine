@@ -12,4 +12,10 @@ final readonly class JsonFileVendingMachineRepository implements VendingMachineR
 {
     #[Override]
     public function save(VendingMachine $vendingMachine): void {}
+
+    #[Override]
+    public function get(): VendingMachine
+    {
+        return VendingMachine::createDefault();
+    }
 }

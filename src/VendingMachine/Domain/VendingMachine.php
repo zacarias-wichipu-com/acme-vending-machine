@@ -24,4 +24,9 @@ final readonly class VendingMachine
             wallet: Wallet::createDefault()
         );
     }
+
+    public function status(): Status
+    {
+        return $this->status;
+    }
 }
