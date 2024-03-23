@@ -22,6 +22,8 @@
     "symfony/yaml": "^7",
     "symfony/messenger": "^7",
     "symfony/validator": "^7",
+    "symfony/serializer": "7",
+    "symfony/property-access": "7",
     "lambdish/phunctional": "^2.1"
   },
   "require-dev": {
