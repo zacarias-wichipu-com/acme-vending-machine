@@ -8,6 +8,7 @@
         findUnusedCode="true"
         allowStringToStandInForClass="true"
         errorBaseline="psalm-baseline.xml"
+        cacheDirectory="var/psalm"
 >
     <projectFiles>
         <directory name="apps"/>
@@ -25,7 +26,7 @@
     </projectFiles>
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
-            <containerXml>var/cache/api/dev/App_Apps_API_KernelDevDebugContainer.xml</containerXml>
+            <containerXml>var/cache/vending-machine/dev/Acme_Ui_Cli_KernelDevDebugContainer.xml</containerXml>
         </pluginClass>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>

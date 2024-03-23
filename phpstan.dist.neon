@@ -7,8 +7,6 @@ parameters:
         - tests/
     excludePaths:
         analyse:
-            - tests/bootstrap.php
+            - apps/bootstrap.php
     symfony:
-        containerXmlPath: var/cache/head/dev/App_Apps_Head_KernelDevDebugContainer.xml
-    doctrine:
-        objectManagerLoader: etc/phpstan/object-manager.php
+        containerXmlPath: var/cache/vending-machine/dev/Acme_Ui_Cli_KernelDevDebugContainer.xml
