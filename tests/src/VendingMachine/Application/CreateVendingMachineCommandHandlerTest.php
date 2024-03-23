@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Acme\VendingMachine\Application;
 
+use Acme\VendingMachine\Application\CreateVendingMachineCommand;
+use Acme\VendingMachine\Application\CreateVendingMachineCommandHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\TestCase;
+use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class CreateVendingMachineCommandHandlerTest extends TestCase
 {

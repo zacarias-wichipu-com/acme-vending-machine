@@ -11,6 +11,13 @@ final readonly class CoinBox
     private function __construct(
         private Coin $coin,
         private int $quantity
-    ) {
+    ) {}
+
+    public static function createDefault(Coin $coin, int $quantity): static
+    {
+        return new static(
+            coin: $coin,
+            quantity: $quantity
+        );
     }
 }

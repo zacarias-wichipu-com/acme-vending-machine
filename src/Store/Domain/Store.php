@@ -8,6 +8,10 @@ final readonly class Store
 {
     private function __construct(
         private Racks $racks
-    ) {
+    ) {}
+
+    public static function createDefault(): static
+    {
+        return new static(racks: Racks::createDefault());
     }
 }

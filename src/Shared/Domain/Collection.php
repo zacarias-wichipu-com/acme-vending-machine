@@ -12,7 +12,10 @@ use Traversable;
 /** @template-implements IteratorAggregate<mixed> */
 abstract class Collection implements Countable, IteratorAggregate
 {
-    public function __construct(private readonly array $items)
+    /**
+     * @param  array  $items
+     */
+    public function __construct(private readonly array $items = [])
     {
         Assert::arrayOf($this->type(), $items);
     }

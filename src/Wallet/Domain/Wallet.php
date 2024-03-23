@@ -10,4 +10,12 @@ final readonly class Wallet
         private Coins $exchangeCoins,
         private Coins $customerCoins,
     ) {}
+
+    public static function createDefault(): static
+    {
+        return new static(
+            exchangeCoins: Coins::createDefaultExchange(),
+            customerCoins: new Coins()
+        );
+    }
 }
