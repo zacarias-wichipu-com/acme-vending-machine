@@ -46,6 +46,11 @@ final class VendingMachine extends AggregateRoot
         return $this->store;
     }
 
+    public function wallet(): Wallet
+    {
+        return $this->wallet;
+    }
+
     public function exchangeAmountAvailable(): int
     {
         return $this->wallet->exchangeAmount();

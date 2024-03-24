@@ -8,6 +8,7 @@ use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Application\VendingMachineResponse;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Infrastructure\Serializer\SymfonyVendingMachineResponseSerializer;
+use Acme\Wallet\Domain\Coins;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
@@ -21,15 +22,22 @@ class VendingMachineResponseTest extends TestCase
      */
     public function testItShouldMakeAValidResponse(): void
     {
-        $randomVendingMachine = VendingMachineMother::randomMachine();
+        $vendingMachine = VendingMachineMother::defaultMachine();
         $response = new VendingMachineResponse(
-            vendingMachine: $randomVendingMachine,
+            vendingMachine: $vendingMachine,
             serializer: new SymfonyVendingMachineResponseSerializer()
         );
         $responseArray = $response->toArray();
-        $this->assertVendingMachine(vendingMachine: $randomVendingMachine, responseArray: $responseArray);
-        $this->assertStore(store: $randomVendingMachine->store(), storeResponseArray: $responseArray['store']);
-        $this->assertWallet(wallet: $randomVendingMachine->wallet(), walletResponseArray: $responseArray['wallet']);
+        $this->assertVendingMachine(vendingMachine: $vendingMachine, responseArray: $responseArray);
+        $this->assertStore(store: $vendingMachine->store(), storeResponseArray: $responseArray['store']);
+        $this->assertExchangeWallet(
+            exchangeCoins: $vendingMachine->wallet()->exchangeCoins(),
+            exchangeCoinsResponseArray: $responseArray['wallet']['exchangeCoins']
+        );
+        $this->assertCustomerWallet(
+            customerCoins: $vendingMachine->wallet()->customerCoins(),
+            customerCoinsResponseArray: $responseArray['wallet']['customerCoins']
+        );
     }
 
     private function assertVendingMachine(VendingMachine $vendingMachine, array $responseArray): void
@@ -59,6 +67,37 @@ class VendingMachineResponseTest extends TestCase
                     $storeResponseArray['racks'][$index]['price'],
                     $storeResponseArray['racks'][$index]['quantity'],
                     $storeResponseArray['racks'][$index]['product']['type']['value'],
+                ]
+            );
+        }
+    }
+
+    private function assertExchangeWallet(Coins $exchangeCoins, array $exchangeCoinsResponseArray): void
+    {
+        foreach ($exchangeCoins as $index => $coinBox) {
+            $this->assertEquals(
+                expected: [
+                    $coinBox->coin()->amountInCents()->value,
+                    $coinBox->quantity(),
+                ],
+                actual: [
+                    $exchangeCoinsResponseArray[$index]['coin']['amountInCents']['value'],
+                    $exchangeCoinsResponseArray[$index]['quantity'],
+                ]
+            );
+        }
+    }
+    private function assertCustomerWallet(Coins $customerCoins, array $customerCoinsResponseArray): void
+    {
+        foreach ($customerCoins as $index => $coinBox) {
+            $this->assertEquals(
+                expected: [
+                    $coinBox->coin()->amountInCents()->value,
+                    $coinBox->quantity(),
+                ],
+                actual: [
+                    $customerCoinsResponseArray[$index]['coin']['amountInCents']['value'],
+                    $customerCoinsResponseArray[$index]['quantity'],
                 ]
             );
         }

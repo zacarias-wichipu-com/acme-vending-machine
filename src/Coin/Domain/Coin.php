@@ -8,11 +8,17 @@ final readonly class Coin
 {
     private function __construct(
         private AmountInCents $amountInCents
-    ) {}
+    ) {
+    }
 
     public static function createFromAmountInCents(AmountInCents $amountInCents): static
     {
         return new static(amountInCents: $amountInCents);
+    }
+
+    public function amountInCents(): AmountInCents
+    {
+        return $this->amountInCents;
     }
 
     public function amount(): int

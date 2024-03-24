@@ -9,7 +9,8 @@ final readonly class Wallet
     private function __construct(
         private Coins $exchangeCoins,
         private Coins $customerCoins,
-    ) {}
+    ) {
+    }
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins): static
     {
@@ -25,6 +26,16 @@ final readonly class Wallet
             exchangeCoins: Coins::createDefaultExchange(),
             customerCoins: Coins::create([]),
         );
+    }
+
+    public function exchangeCoins(): Coins
+    {
+        return $this->exchangeCoins;
+    }
+
+    public function customerCoins(): Coins
+    {
+        return $this->customerCoins;
     }
 
     public function exchangeAmount(): int
