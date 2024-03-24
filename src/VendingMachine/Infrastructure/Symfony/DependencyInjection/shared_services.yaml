@@ -6,3 +6,6 @@ services:
         autoconfigure: true
     Acme\Shared\:
         resource: '%context.root_path%/src/Shared/{Application,Domain,Infrastructure}/*'
+    serializer.denormalizer.vending_machine:
+        class: Acme\VendingMachine\Infrastructure\Persistence\SymfonyVendingMachineDenormalizer
+        tags: [serializer.normalizer]
