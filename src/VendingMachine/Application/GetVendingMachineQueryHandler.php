@@ -18,6 +18,6 @@ final readonly class GetVendingMachineQueryHandler implements QueryHandler
     public function __invoke(Query $query): ?Response
     {
         $vendingMachine = $this->repository->get();
-        return new VendingMachineResponse();
+        return new VendingMachineResponse(vendingMachine: $vendingMachine);
     }
 }

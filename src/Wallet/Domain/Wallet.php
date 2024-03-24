@@ -41,4 +41,9 @@ final readonly class Wallet
     {
         return $this->exchangeCoins->amount();
     }
+
+    public function customerAmount(): int
+    {
+        return $this->customerCoins->amount();
+    }
 }

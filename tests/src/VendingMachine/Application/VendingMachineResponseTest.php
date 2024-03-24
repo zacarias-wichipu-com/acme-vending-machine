@@ -7,7 +7,6 @@ namespace Tests\Acme\VendingMachine\Application;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Application\VendingMachineResponse;
 use Acme\VendingMachine\Domain\VendingMachine;
-use Acme\VendingMachine\Infrastructure\Serializer\SymfonyVendingMachineResponseSerializer;
 use Acme\Wallet\Domain\Coins;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -24,10 +23,7 @@ class VendingMachineResponseTest extends TestCase
      */
     public function testItShouldMakeAValidResponse(VendingMachine $vendingMachine): void
     {
-        $response = new VendingMachineResponse(
-            vendingMachine: $vendingMachine,
-            serializer: new SymfonyVendingMachineResponseSerializer()
-        );
+        $response = new VendingMachineResponse(vendingMachine: $vendingMachine);
         $responseArray = $response->toArray();
         $this->assertVendingMachine(vendingMachine: $vendingMachine, responseArray: $responseArray);
         $this->assertStore(store: $vendingMachine->store(), storeResponseArray: $responseArray['store']);
@@ -58,7 +54,7 @@ class VendingMachineResponseTest extends TestCase
                 $vendingMachine->status()->value,
             ],
             actual: [
-                $responseArray['status']['value'],
+                $responseArray['status'],
             ]
         );
     }
@@ -73,9 +69,9 @@ class VendingMachineResponseTest extends TestCase
                     $rack->product()->type()->value,
                 ],
                 actual: [
-                    $storeResponseArray['racks'][$index]['price'],
-                    $storeResponseArray['racks'][$index]['quantity'],
-                    $storeResponseArray['racks'][$index]['product']['type']['value'],
+                    $storeResponseArray[$index]['price'],
+                    $storeResponseArray[$index]['quantity'],
+                    $storeResponseArray[$index]['product'],
                 ]
             );
         }
@@ -90,7 +86,7 @@ class VendingMachineResponseTest extends TestCase
                     $coinBox->quantity(),
                 ],
                 actual: [
-                    $exchangeCoinsResponseArray[$index]['coin']['amountInCents']['value'],
+                    $exchangeCoinsResponseArray[$index]['coin'],
                     $exchangeCoinsResponseArray[$index]['quantity'],
                 ]
             );

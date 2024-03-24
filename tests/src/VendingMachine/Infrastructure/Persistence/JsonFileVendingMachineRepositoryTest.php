@@ -84,11 +84,11 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
         $this->assertEquals(
             expected: [
                 $expectedRandomVendingMachine->status(),
-                $expectedRandomVendingMachine->exchangeAmountAvailable(),
+                $expectedRandomVendingMachine->exchangeAmount(),
             ],
             actual: [
                 $vendingMachine->status(),
-                $vendingMachine->exchangeAmountAvailable(),
+                $vendingMachine->exchangeAmount(),
             ]
         );
     }
