@@ -10,8 +10,8 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @template T
- * @template-implements IteratorAggregate<T>
+ * @template  T
+ * @implements IteratorAggregate<T>
  */
 abstract class Collection implements Countable, IteratorAggregate
 {
@@ -34,12 +34,12 @@ abstract class Collection implements Countable, IteratorAggregate
     }
 
     /**
-     * @return class-string
+     * @return  class-string
      */
     abstract protected function type(): string;
 
     /**
-     * @return array<T>
+     * @return  array<T>
      */
     protected function items(): array
     {

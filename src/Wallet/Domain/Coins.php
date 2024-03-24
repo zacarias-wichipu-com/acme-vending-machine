@@ -10,8 +10,8 @@ use Acme\Shared\Domain\Collection;
 use Override;
 
 /**
- * @template  T
- * @extends  Collection<T>
+ * @template  T  of  CoinBox
+ * @extends Collection<T>
  */
 final class Coins extends Collection
 {
@@ -25,7 +25,7 @@ final class Coins extends Collection
     }
 
     /**
-     * @param  array<T>  $coinBox
+     * @param  array<int, CoinBox>  $coinBox
      */
     public static function create(array $coinBox): static
     {

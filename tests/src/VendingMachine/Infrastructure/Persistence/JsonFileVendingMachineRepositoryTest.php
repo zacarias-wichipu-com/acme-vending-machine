@@ -19,7 +19,7 @@ class JsonFileVendingMachineRepositoryTest extends AppContextInfrastructureTestC
     {
         parent::setUp();
         $this->repository = new JsonFileVendingMachineRepository(
-            persistenceFilePath: dirname(__DIR__) . '/../../../../var/persistence/test_vending_machine.json',
+            persistenceFilePath: dirname(__DIR__).'/../../../../var/persistence/test_vending_machine.json',
             filesystem: $this->service('filesystem'),
         );
     }

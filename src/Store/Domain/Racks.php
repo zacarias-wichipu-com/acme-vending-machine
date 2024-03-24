@@ -10,13 +10,13 @@ use Acme\Shared\Domain\Collection;
 use Override;
 
 /**
- * @template  T
- * @extends  Collection<T>
+ * @template  T  of  Rack
+ * @extends Collection<T>
  */
 final class Racks extends Collection
 {
     /**
-     * @param  array<T>  $racks
+     * @param  array<int, Rack>  $racks
      */
     public static function create(array $racks): static
     {

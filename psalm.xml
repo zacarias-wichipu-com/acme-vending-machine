@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-        errorLevel="2"
+        errorLevel="4"
         findUnusedBaselineEntry="false"
         findUnusedCode="true"
         allowStringToStandInForClass="true"
@@ -30,6 +30,11 @@
                 <directory name="."/>
             </errorLevel>
         </UnusedProperty>
+        <PossiblyUnusedReturnValue>
+            <errorLevel type="suppress">
+                <file name="src/VendingMachine/Infrastructure/Persistence/JsonFileVendingMachineRepository.php"/>
+            </errorLevel>
+        </PossiblyUnusedReturnValue>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin">
