@@ -24,7 +24,7 @@ final readonly class SymfonyMessengerBusCommand implements BusCommand
     }
 
     #[\Override]
-    public function ak(Query $query): ?Response
+    public function ask(Query $query): ?Response
     {
         /** @var HandledStamp $stamp */
         $stamp = $this->queryBus->dispatch($query)->last(HandledStamp::class);

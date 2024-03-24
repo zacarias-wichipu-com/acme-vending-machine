@@ -11,5 +11,5 @@ use Acme\Shared\Domain\Bus\Query\Response;
 interface BusCommand
 {
     public function dispatch(Command $command): void;
-    public function ak(Query $query): ?Response;
+    public function ask(Query $query): ?Response;
 }

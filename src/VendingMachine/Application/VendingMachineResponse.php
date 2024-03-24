@@ -8,11 +8,9 @@ use Acme\Coin\Domain\Coin;
 use Acme\Product\Domain\Product;
 use Acme\Shared\Domain\Bus\Query\Response;
 use Acme\Store\Domain\Rack;
-use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\Wallet\Domain\CoinBox;
 use Acme\Wallet\Domain\Coins;
-use Acme\Wallet\Domain\Wallet;
 
 final readonly class VendingMachineResponse implements Response
 {
@@ -24,15 +22,25 @@ final readonly class VendingMachineResponse implements Response
     public function toArray(): array
     {
         return [
-            'status' => $this->vendingMachine->status()->value,
-            'exchangeAmount' => $this->vendingMachine->exchangeAmount(),
-            'customerAmount' => $this->vendingMachine->customerAmount(),
-            'store' => $this->storeToArray($this->vendingMachine->store()),
-            'wallet' => $this->walletToArray($this->vendingMachine->wallet()),
+            'status' => $this->status(),
+            'exchangeAmount' => $this->exchangeAmount(),
+            'customerAmount' => $this->customerAmount(),
+            'store' => $this->store(),
+            'wallet' => $this->wallet(),
         ];
     }
 
-    private function storeToArray(Store $store): array
+    public function exchangeAmount(): int
+    {
+        return $this->vendingMachine->exchangeAmount();
+    }
+
+    public function customerAmount(): int
+    {
+        return $this->vendingMachine->customerAmount();
+    }
+
+    public function store(): array
     {
         return array_map(
             callback: fn(Rack $rack): array => [
@@ -40,7 +48,7 @@ final readonly class VendingMachineResponse implements Response
                 'quantity' => $rack->quantity(),
                 'price' => $rack->price(),
             ],
-            array: (array) $store->racks()->getIterator()
+            array: (array) $this->vendingMachine->store()->racks()->getIterator()
         );
     }
 
@@ -49,15 +57,25 @@ final readonly class VendingMachineResponse implements Response
         return $product->type()->value;
     }
 
-    private function walletToArray(Wallet $wallet): array
+    private function wallet(): array
     {
         return [
-            'exchangeCoins' => $this->coinsToArray(coins: $wallet->exchangeCoins()),
-            'customerCoins' => $this->coinsToArray(coins: $wallet->customerCoins()),
+            'exchangeCoins' => $this->exchangeCoins(),
+            'customerCoins' => $this->customerCoins(),
         ];
     }
 
-    private function coinsToArray(Coins $coins): array
+    public function exchangeCoins(): array
+    {
+        return $this->coins(coins: $this->vendingMachine->wallet()->exchangeCoins());
+    }
+
+    public function customerCoins(): array
+    {
+        return $this->coins(coins: $this->vendingMachine->wallet()->customerCoins());
+    }
+
+    private function coins(Coins $coins): array
     {
         return array_map(
             callback: fn(CoinBox $coinBox): array => [
@@ -70,5 +88,10 @@ final readonly class VendingMachineResponse implements Response
     private function coinToArray(Coin $coin): int
     {
         return $coin->amount();
+    }
+
+    public function status(): string
+    {
+        return $this->vendingMachine->status()->value;
     }
 }
