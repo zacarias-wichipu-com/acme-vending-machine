@@ -11,13 +11,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'machine:create')]
-final class CreateVendingMachineCommand extends Command
+#[AsCommand(name: 'machine:init')]
+final class InitVendingMachineCommand extends Command
 {
     public function __construct(
         private readonly BusCommand $bus
     ) {
-        parent::__construct('machine:create');
+        parent::__construct('machine:init');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

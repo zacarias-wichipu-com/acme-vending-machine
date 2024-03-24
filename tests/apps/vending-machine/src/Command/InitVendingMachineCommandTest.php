@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Acme\Ui\Cli\Command;
 
-use Acme\Ui\Cli\Command\CreateVendingMachineCommand;
+use Acme\Ui\Cli\Command\InitVendingMachineCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tests\Acme\Shared\Infrastructure\PhpUnit\AppContextInfrastructureTestCase;
 
-class CreateVendingMachineCommandTest extends AppContextInfrastructureTestCase
+class InitVendingMachineCommandTest extends AppContextInfrastructureTestCase
 {
     /**
      * It Should Return A Success Response
@@ -18,7 +18,7 @@ class CreateVendingMachineCommandTest extends AppContextInfrastructureTestCase
      */
     public function testItShouldReturnASuccessResponse(): void
     {
-        $command =  new CreateVendingMachineCommand($this->service('console_command.messenger_bus'));
+        $command =  new InitVendingMachineCommand($this->service('console_command.messenger_bus'));
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $commandTester->assertCommandIsSuccessful();
