@@ -87,8 +87,13 @@ i-tests: composer-env-file ## ✅  Integration tests
 	@echo "${INFO_PROMPT_INIT}Run integration tests...${INFO_PROMPT_END}"
 	@docker exec php ./vendor/bin/phpunit --colors=always --group integration
 
+.PHONY: a-tests
+a-tests: composer-env-file ## ✅  Application tests
+	@echo "${INFO_PROMPT_INIT}Run integration tests...${INFO_PROMPT_END}"
+	@docker exec php ./vendor/bin/phpunit --colors=always --group application
+
 .PHONY: tests
-tests: composer-env-file u-tests i-tests ## ✅  All tests
+tests: composer-env-file u-tests i-tests a-tests## ✅  All tests
 ##  init-db-test doctrine-migrate-db-test
 
 # ⚒️ Utils
