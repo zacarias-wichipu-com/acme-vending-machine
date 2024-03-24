@@ -51,7 +51,8 @@ class VendingMachineResponseTest extends TestCase
             ],
             actual: [
                 $responseArray['status']['value'],
-            ]);
+            ]
+        );
     }
 
     private function assertStore(Store $store, array $storeResponseArray): void

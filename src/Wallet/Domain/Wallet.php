@@ -9,8 +9,7 @@ final readonly class Wallet
     private function __construct(
         private Coins $exchangeCoins,
         private Coins $customerCoins,
-    ) {
-    }
+    ) {}
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins): static
     {

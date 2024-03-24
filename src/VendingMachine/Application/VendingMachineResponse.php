@@ -12,8 +12,7 @@ final readonly class VendingMachineResponse implements Response
     public function __construct(
         private VendingMachine $vendingMachine,
         private VendingMachineResponseSerializer $serializer
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function toArray(): array
