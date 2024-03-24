@@ -4,8 +4,18 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-    Acme\Shared\:
-        resource: '%context.root_path%/src/Shared/{Application,Domain,Infrastructure}/*'
+    _instanceof:
+        Acme\Shared\Domain\Bus\Command\CommandHandler:
+            tags:
+                - {name: messenger.message_handler, bus: command.bus}
+        Acme\Shared\Domain\Bus\Query\QueryHandler:
+            tags:
+                - {name: messenger.message_handler, bus: query.bus}
+    Acme\VendingMachine\:
+        resource: '%context.root_path%/src/VendingMachine/{Application,Domain,Infrastructure}/*'
+    Acme\VendingMachine\Infrastructure\Persistence\JsonFileVendingMachineRepository:
+        arguments:
+            $persistenceFilePath: 'var/persistence/vending_machine.json'
     serializer.denormalizer.vending_machine:
         class: Acme\VendingMachine\Infrastructure\Normalizer\SymfonyVendingMachineDenormalizer
         tags: [serializer.normalizer]
