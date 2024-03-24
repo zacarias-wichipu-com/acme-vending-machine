@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Acme\Ui\Cli\Command;
 
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
+use Acme\VendingMachine\Application\GetVendingMachineQuery;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
