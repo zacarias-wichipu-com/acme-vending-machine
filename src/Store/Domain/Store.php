@@ -27,4 +27,9 @@ final readonly class Store
     {
         return static::create(racks: Racks::createDefault());
     }
+
+    public function racks(): Racks
+    {
+        return $this->racks;
+    }
 }
