@@ -1,5 +1,7 @@
 parameters:
     context.root_path: '../../../../..'
+    default_json_file_persistence: 'var/persistence/vending_machine.json'
+    json_file_persistence: '%env(string:default:default_json_file_persistence:JSON_FILE_PERSISTENCE)%'
 services:
     _defaults:
         autowire: true
@@ -15,7 +17,7 @@ services:
         resource: '%context.root_path%/src/VendingMachine/{Application,Domain,Infrastructure}/*'
     Acme\VendingMachine\Infrastructure\Persistence\JsonFileVendingMachineRepository:
         arguments:
-            $persistenceFilePath: 'var/persistence/vending_machine.json'
+            $persistenceFilePath: '%json_file_persistence%'
     serializer.denormalizer.vending_machine:
         class: Acme\VendingMachine\Infrastructure\Normalizer\SymfonyVendingMachineDenormalizer
         tags: [serializer.normalizer]

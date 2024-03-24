@@ -1,6 +1,0 @@
-parameters:
-    app.root_path: '../../..'
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
