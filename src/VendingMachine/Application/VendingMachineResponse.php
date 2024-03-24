@@ -8,7 +8,6 @@ use Acme\Shared\Domain\Bus\Query\Response;
 
 final class VendingMachineResponse implements Response
 {
-
     #[\Override]
     public function toArray(): array
     {

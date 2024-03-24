@@ -13,8 +13,7 @@ final readonly class GetVendingMachineQueryHandler implements QueryHandler
 {
     public function __construct(
         private VendingMachineRepository $repository
-    ) {
-    }
+    ) {}
 
     public function __invoke(Query $query): ?Response
     {
