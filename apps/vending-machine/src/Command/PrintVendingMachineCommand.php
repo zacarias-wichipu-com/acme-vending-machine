@@ -21,6 +21,7 @@ final class PrintVendingMachineCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->bus->ak(new GetVendingMachineQuery());
         return Command::SUCCESS;
     }
 }
