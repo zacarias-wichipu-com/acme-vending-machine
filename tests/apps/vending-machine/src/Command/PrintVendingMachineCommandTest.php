@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Acme\Ui\Cli\Command;
 
+use Acme\Ui\Cli\Command\PrintVendingMachineCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tests\Acme\Shared\Infrastructure\PhpUnit\AppContextInfrastructureTestCase;
 
