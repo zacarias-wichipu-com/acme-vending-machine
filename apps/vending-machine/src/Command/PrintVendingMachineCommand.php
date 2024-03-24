@@ -30,8 +30,8 @@ final class PrintVendingMachineCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->text([
             sprintf('<fg=blue>Machine status</>: %1$s', $vendingMachine->status()),
-            sprintf('<fg=blue>Exchange amount</>: %1$s', (string) CurrencyUtils::toDecimal($vendingMachine->exchangeAmount())),
-            sprintf('<fg=blue>Customer amount</>: %1$s', (string) CurrencyUtils::toDecimal($vendingMachine->customerAmount())),
+            sprintf('<fg=blue>Exchange amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachine->exchangeAmount())),
+            sprintf('<fg=blue>Customer amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachine->customerAmount())),
             '',
             "<fg=blue>Store:</> ",
         ]);
@@ -42,7 +42,7 @@ final class PrintVendingMachineCommand extends Command
                 '<fg=white>Quantity</>',
             ],
             rows: array_map(
-                callback: static fn($rack): array => [$rack['product'], (string) CurrencyUtils::toDecimal($rack['price']), $rack['quantity']],
+                callback: static fn($rack): array => [$rack['product'], CurrencyUtils::toDecimalString($rack['price']), $rack['quantity']],
                 array: $vendingMachine->store()
             )
         );
@@ -55,7 +55,7 @@ final class PrintVendingMachineCommand extends Command
                 '<fg=white>Quantity</>',
             ],
             rows: array_map(
-                callback: static fn($coin): array => [(string) CurrencyUtils::toDecimal($coin['coin']), $coin['quantity']],
+                callback: static fn($coin): array => [CurrencyUtils::toDecimalString($coin['coin']), $coin['quantity']],
                 array: $vendingMachine->exchangeCoins()
             )
         );

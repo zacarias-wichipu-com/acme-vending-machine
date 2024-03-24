@@ -10,4 +10,14 @@ final class CurrencyUtils
     {
         return $amount * 10 ** -2;
     }
+
+    public static function toDecimalString(int $amount): string
+    {
+        return number_format(
+            num: self::toDecimal($amount),
+            decimals: 2,
+            decimal_separator: '.',
+            thousands_separator: ''
+        );
+    }
 }
