@@ -18,8 +18,7 @@ final readonly class VendingMachineResponse implements Response
 {
     public function __construct(
         private VendingMachine $vendingMachine,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function toArray(): array
