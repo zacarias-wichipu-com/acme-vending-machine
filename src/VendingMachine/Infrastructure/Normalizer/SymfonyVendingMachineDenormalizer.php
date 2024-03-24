@@ -27,7 +27,7 @@ final readonly class SymfonyVendingMachineDenormalizer implements DenormalizerIn
         string $type,
         string $format = null,
         array $context = []
-    ): mixed {
+    ): VendingMachine {
         return VendingMachine::create(
             status: Status::from(value: $data->status->value),
             store: Store::create(

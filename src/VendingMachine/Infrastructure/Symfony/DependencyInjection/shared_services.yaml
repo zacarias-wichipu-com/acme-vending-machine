@@ -7,5 +7,5 @@ services:
     Acme\Shared\:
         resource: '%context.root_path%/src/Shared/{Application,Domain,Infrastructure}/*'
     serializer.denormalizer.vending_machine:
-        class: Acme\VendingMachine\Infrastructure\Persistence\SymfonyVendingMachineDenormalizer
+        class: Acme\VendingMachine\Infrastructure\Normalizer\SymfonyVendingMachineDenormalizer
         tags: [serializer.normalizer]
