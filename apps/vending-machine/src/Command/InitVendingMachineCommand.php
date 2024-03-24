@@ -8,8 +8,10 @@ use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\CreateVendingMachineCommand as DomainCreateVendingMachineCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 #[AsCommand(name: 'machine:init')]
 final class InitVendingMachineCommand extends Command
@@ -20,9 +22,16 @@ final class InitVendingMachineCommand extends Command
         parent::__construct('machine:init');
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->bus->dispatch(new DomainCreateVendingMachineCommand());
+        $printInput = new ArrayInput([
+            'command' => 'machine:print',
+        ]);
+        $this->getApplication()?->doRun($printInput, $output);
         return Command::SUCCESS;
     }
 }
