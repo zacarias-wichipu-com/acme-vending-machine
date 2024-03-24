@@ -9,6 +9,7 @@ use Acme\VendingMachine\Application\VendingMachineResponse;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Infrastructure\Serializer\SymfonyVendingMachineResponseSerializer;
 use Acme\Wallet\Domain\Coins;
+use Generator;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
@@ -17,12 +18,12 @@ class VendingMachineResponseTest extends TestCase
     /**
      * It Should Make A Valid Response
      *
+     * @dataProvider vendingMachineData
      * @group vending_machine_response
      * @group unit
      */
-    public function testItShouldMakeAValidResponse(): void
+    public function testItShouldMakeAValidResponse(VendingMachine $vendingMachine): void
     {
-        $vendingMachine = VendingMachineMother::defaultMachine();
         $response = new VendingMachineResponse(
             vendingMachine: $vendingMachine,
             serializer: new SymfonyVendingMachineResponseSerializer()
@@ -38,6 +39,13 @@ class VendingMachineResponseTest extends TestCase
             customerCoins: $vendingMachine->wallet()->customerCoins(),
             customerCoinsResponseArray: $responseArray['wallet']['customerCoins']
         );
+    }
+
+    public static function vendingMachineData(): Generator
+    {
+        yield [VendingMachineMother::defaultMachine()];
+        yield [VendingMachineMother::randomMachine()];
+        yield [VendingMachineMother::randomMachine()];
     }
 
     private function assertVendingMachine(VendingMachine $vendingMachine, array $responseArray): void
