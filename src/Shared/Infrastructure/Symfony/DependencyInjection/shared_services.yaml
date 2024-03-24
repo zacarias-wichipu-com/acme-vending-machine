@@ -6,3 +6,6 @@ services:
         autoconfigure: true
     Acme\Shared\:
         resource: '%context.root_path%/src/Shared/{Application,Domain,Infrastructure}/*'
+    console_command.messenger_bus:
+        class: Acme\Shared\Infrastructure\Symfony\Console\Command\SymfonyMessengerBusCommand
+        public: true

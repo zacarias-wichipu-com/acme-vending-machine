@@ -18,7 +18,7 @@ class CreateVendingMachineCommandTest extends AppContextInfrastructureTestCase
      */
     public function testItShouldReturnASuccessResponse(): void
     {
-        $command =  new CreateVendingMachineCommand();
+        $command =  new CreateVendingMachineCommand($this->service('console_command.messenger_bus'));
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
         $commandTester->assertCommandIsSuccessful();
