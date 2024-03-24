@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Acme\Wallet\Domain;
 
-final readonly class Wallet
+use Acme\Coin\Domain\Coin;
+
+final class Wallet
 {
     private function __construct(
         private Coins $exchangeCoins,
@@ -46,4 +48,24 @@ final readonly class Wallet
     {
         return $this->customerCoins->amount();
     }
+
+    public function addCustomerCoin(Coin $coin): void
+    {
+        $updatedCoins = $this->addCoin($this->customerCoins, $coin);
+        $this->customerCoins = Coins::create($updatedCoins);
+    }
+
+    private function addCoin(Coins $coins, Coin $coin): array
+    {
+        $totalCoinsFromAmount = $coins->countFromCoinAmount($coin->amountInCents());
+        $coinBoxes = (array) $coins->getIterator();
+        foreach ($coinBoxes as $coinBox) {
+            if ($coinBox->coin()->amountInCents() === $coin->amountInCents()) {
+                unset($coinBox);
+            }
+        }
+        $coinBoxes[] = CoinBox::create($coin, ++$totalCoinsFromAmount);
+        return $coinBoxes;
+    }
+
 }

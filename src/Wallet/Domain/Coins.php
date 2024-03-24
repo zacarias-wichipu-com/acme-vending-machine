@@ -62,4 +62,13 @@ final class Coins extends Collection
             initial: 0
         );
     }
+
+    public function countFromCoinAmount(AmountInCents $amountInCents): int
+    {
+        return array_reduce(
+            $this->items(),
+            static fn(int $quantity, CoinBox $coinBox): int => $coinBox->coin()->amountInCents() === $amountInCents ? $coinBox->quantity() : $quantity,
+            0
+        );
+    }
 }
