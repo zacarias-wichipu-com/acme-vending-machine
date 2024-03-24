@@ -7,6 +7,7 @@ namespace Acme\VendingMachine\Infrastructure\Persistence;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Acme\VendingMachine\Domain\VendorRepositoryException;
+use Acme\VendingMachine\Infrastructure\Normalizer\SymfonyVendingMachineDenormalizer;
 use JsonException;
 use Override;
 use Symfony\Component\Filesystem\Filesystem;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\VendingMachine\Infrastructure\Persistence;
+namespace Acme\VendingMachine\Infrastructure\Normalizer;
 
 use Acme\Coin\Domain\AmountInCents;
 use Acme\Coin\Domain\Coin;
