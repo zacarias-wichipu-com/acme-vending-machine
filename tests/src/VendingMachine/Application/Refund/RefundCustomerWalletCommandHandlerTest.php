@@ -52,7 +52,7 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
     public function testItShouldBeAbleToRefundCustomerCoins(): void
     {
         $vendingMachine = VendingMachineMother::randomMachine(
-            status: Status::IN_SERVICE,
+            status: Status::SELLING,
             wallet: VendingMachineMother::randomWallet(
                 exchangeCoins: VendingMachineMother::randomCoins(),
                 customerCoins: VendingMachineMother::randomCoins(),

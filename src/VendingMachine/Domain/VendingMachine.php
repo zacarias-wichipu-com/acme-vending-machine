@@ -46,12 +46,12 @@ final class VendingMachine extends AggregateRoot
         return $this->status;
     }
 
-    public function putInService(): void
+    public function putInSellingMode(): void
     {
-        if ($this->status === Status::IN_SERVICE) {
+        if ($this->status === Status::SELLING) {
             return;
         }
-        $this->status = Status::IN_SERVICE;
+        $this->status = Status::SELLING;
     }
 
     public function putOperational()

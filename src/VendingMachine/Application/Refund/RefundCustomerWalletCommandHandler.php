@@ -31,7 +31,7 @@ final readonly class RefundCustomerWalletCommandHandler implements CommandHandle
 
     private function ensureRefund(VendingMachine $vendingMachine): void
     {
-        if ($vendingMachine->status() !== Status::IN_SERVICE) {
+        if ($vendingMachine->status() !== Status::SELLING) {
             throw new NotServiceAvailableException(message: 'Not service to refund.');
         }
     }

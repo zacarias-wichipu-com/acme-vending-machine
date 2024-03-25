@@ -17,7 +17,7 @@ final readonly class UpdateStatusOnCustomerAddCoin implements DomainEventSubscri
     public function __invoke(CustomerHasInsertACoinEvent $event): void
     {
         $vendingMachine = $this->repository->get();
-        $vendingMachine->putInService();
+        $vendingMachine->putInSellingMode();
         $this->repository->save($vendingMachine);
     }
 }
