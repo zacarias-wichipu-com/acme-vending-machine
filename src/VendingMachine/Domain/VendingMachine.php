@@ -55,7 +55,7 @@ final class VendingMachine extends AggregateRoot
         $this->status = Status::SELLING;
     }
 
-    public function putOperational()
+    public function putOperational(): void
     {
         if ($this->status === Status::OPERATIONAL) {
             return;
