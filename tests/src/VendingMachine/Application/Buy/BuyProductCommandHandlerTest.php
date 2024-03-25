@@ -24,6 +24,40 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
     private VendingMachineRepository&MockObject $repository;
     private BuyProductCommandHandler $handler;
 
+    public function anInsufficientBalanceVendingMachineState(): \Acme\VendingMachine\Domain\VendingMachine
+    {
+        return VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            store: VendingMachineMother::randomStore(
+                racks: [
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
+                        quantity: 2,
+                        price: 100
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::WATER),
+                        quantity: 1,
+                        price: 65
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::SODA),
+                        quantity: 1,
+                        price: 150
+                    ),
+                ]
+            ),
+            wallet: VendingMachineMother::randomWallet(
+                customerCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
+                    ]
+                )
+            )
+        );
+    }
+
     protected function setUp(): void
     {
         $this->repository = $this->createMock(VendingMachineRepository::class);
@@ -77,36 +111,20 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
     public function testItShouldThrowAnInsufficientAmountExceptionForInsufficientCustomerBalance(): void
     {
         $this->expectException(InsufficientAmountException::class);
-        $vendingMachine = VendingMachineMother::randomMachine(
-            status: Status::SELLING,
-            store: VendingMachineMother::randomStore(
-                racks:[
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
-                        quantity: 2,
-                        price: 100
-                    ),
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::WATER),
-                        quantity: 1,
-                        price: 65
-                    ),
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::SODA),
-                        quantity: 1,
-                        price: 150
-                    ),
-                ]
-            ),
-            wallet: VendingMachineMother::randomWallet(
-                customerCoins: VendingMachineMother::randomCoins(
-                    coinBoxes: [
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
-                    ]
-                )
-            )
-        );
+        $vendingMachine = $this->anInsufficientBalanceVendingMachineState();
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
+    }
+
+    /**
+     * It Should Throw An Insufficient Exchange Exception For Insufficient Exchange
+     *
+     * @group buy_product_command_handler
+     */
+    public function testItShouldThrowAnInsufficientExchangeExceptionForInsufficientExchange(): void
+    {
+        $this->expectException(InsufficientExchangeException::class);
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
