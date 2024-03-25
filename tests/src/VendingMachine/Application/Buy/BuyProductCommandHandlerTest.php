@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Acme\VendingMachine\Application\Buy;
 
+use Acme\Coin\Domain\AmountInCents;
 use Acme\Product\Domain\Exception\InvalidProductException;
 use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Bus\Command\CommandHandler;
@@ -64,5 +65,30 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: 'wrong product'));
+    }
+
+    /**
+     * It Should Throw An Insufficient Amount Exception For Insufficient Customer Balance
+     *
+     * @group buy_product_command_handler
+     * @group unit
+     */
+    public function testItShouldThrowAnInsufficientAmountExceptionForInsufficientCustomerBalance(): void
+    {
+        $this->expectException(InsufficientAmountException::class);
+        $vendingMachine = VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            wallet: VendingMachineMother::randomWallet(
+                customerCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
+                    ]
+                )
+            )
+        );
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
     }
 }

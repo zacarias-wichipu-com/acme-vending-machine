@@ -83,9 +83,19 @@ final class VendingMachineMother
         );
     }
 
-    public static function randomCoins(): Coins
+    public static function randomCoins(?array $coinBoxes = null): Coins
     {
-        return Coins::create([
+        return Coins::create(coinBox: $coinBoxes ?: self::randomCoinBoxes());
+    }
+
+    private static function noCoins(): Coins
+    {
+        return Coins::create([]);
+    }
+
+    public static function randomCoinBoxes(): array
+    {
+        return [
             CoinBox::create(
                 Coin::createFromAmountInCents(AmountInCents::FIVE),
                 MotherCreator::random()->numberBetween(1, 10)
@@ -102,11 +112,14 @@ final class VendingMachineMother
                 Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED),
                 MotherCreator::random()->numberBetween(1, 10)
             ),
-        ]);
+        ];
     }
 
-    private static function noCoins(): Coins
+    public static function coinBoxFrom(AmountInCents $amountInCents, int $quantity): CoinBox
     {
-        return Coins::create([]);
+        return CoinBox::create(
+            coin: Coin::createFromAmountInCents(amountInCents: $amountInCents),
+            quantity: $quantity
+        );
     }
 }
