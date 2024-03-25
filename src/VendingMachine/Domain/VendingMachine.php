@@ -138,6 +138,10 @@ final class VendingMachine extends AggregateRoot
     {
         $this->ensureBuyBalance($product);
         $this->ensureBuyExchange($product);
+        // Update store
+        // Update exchange wallet
+        // Reset customer wallet
+        // Record ProductWasBoughtDomainEvent
     }
 
     private function ensureBuyBalance(ProductType $product): void
