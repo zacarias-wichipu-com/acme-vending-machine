@@ -9,6 +9,7 @@ use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
+use Acme\Wallet\Domain\Coins;
 use Acme\Wallet\Domain\Wallet;
 
 final class VendingMachine extends AggregateRoot
@@ -78,6 +79,11 @@ final class VendingMachine extends AggregateRoot
     public function customerAmount(): int
     {
         return $this->wallet->customerAmount();
+    }
+
+    public function customerCoins(): Coins
+    {
+        return $this->wallet->customerCoins();
     }
 
     public function addCustomerCoin(Coin $coin): void

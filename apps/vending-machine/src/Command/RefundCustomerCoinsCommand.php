@@ -8,7 +8,7 @@ use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
-use Acme\VendingMachine\Domain\VendingMachine;
+use Acme\VendingMachine\Application\VendingMachineResponse;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -31,12 +31,19 @@ final class RefundCustomerCoinsCommand extends Command
         $io->text([
             '<fg=bright-magenta>--> Refund customer coins.</>',
         ]);
-        /** @var VendingMachine $vendingMachine */
-        $vendingMachine = $this->bus->ask(new GetVendingMachineQuery());
-        $refundedCoins = $vendingMachine->customerAmount();
+        /** @var VendingMachineResponse $vendingMachineResponse */
+        $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
+        $refundedAmount = $vendingMachineResponse->customerAmount();
+        $refundedCoins = $vendingMachineResponse->customerCoins();
+        $refundedCoins = array_reduce(
+            array: $vendingMachineResponse->customerCoins(),
+            callback: static fn(array $carry, array $coins): array => [...$carry, ...array_fill(0, $coins['quantity'], CurrencyUtils::toDecimalString($coins['coin']))],
+            initial: []
+        );
         $this->bus->dispatch(command: new RefundCustomerWalletCommand());
         $io->text([
-            sprintf('<fg=bright-green>-->--> Refunded %1$s.</>', CurrencyUtils::toDecimalString($refundedCoins)),
+            sprintf('<fg=bright-green>-->--> Amount refunded %1$s (coins: %2$s).</>', CurrencyUtils::toDecimalString($refundedAmount), implode(', ',
+                $refundedCoins)),
         ]);
         $printInput = new ArrayInput([
             'command' => 'machine:print',
