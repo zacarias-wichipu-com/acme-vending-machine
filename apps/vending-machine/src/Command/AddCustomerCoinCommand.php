@@ -11,7 +11,6 @@ use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWal
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -62,10 +61,6 @@ final class AddCustomerCoinCommand extends Command
         $io->text([
             sprintf('<fg=bright-green>--> --> Inserted a %1$s coin.</>', $choice),
         ]);
-        $printInput = new ArrayInput([
-            'command' => 'machine:print',
-        ]);
-        $this->getApplication()?->doRun($printInput, $output);
         return Command::SUCCESS;
     }
 }

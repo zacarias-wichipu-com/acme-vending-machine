@@ -12,7 +12,6 @@ use Acme\VendingMachine\Application\VendingMachineResponse;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -60,10 +59,6 @@ final class RefundCustomerCoinsCommand extends Command
                 )
             ),
         ]);
-        $printInput = new ArrayInput([
-            'command' => 'machine:print',
-        ]);
-        $this->getApplication()?->doRun($printInput, $output);
         return Command::SUCCESS;
     }
 }

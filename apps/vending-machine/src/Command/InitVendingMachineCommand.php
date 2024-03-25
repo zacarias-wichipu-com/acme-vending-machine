@@ -8,7 +8,6 @@ use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Create\CreateVendingMachineCommand as DomainCreateVendingMachineCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -36,10 +35,6 @@ final class InitVendingMachineCommand extends Command
         $io->text([
             '<fg=bright-green>--> --> Vending machine initialised.</>'
         ]);
-        $printInput = new ArrayInput([
-            'command' => 'machine:print',
-        ]);
-        $this->getApplication()?->doRun($printInput, $output);
         return Command::SUCCESS;
     }
 }
