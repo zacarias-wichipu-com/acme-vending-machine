@@ -6,7 +6,7 @@ namespace Acme\VendingMachine\Application\AddCoinToCustomerWallet;
 
 use Acme\Coin\Domain\AmountInCents;
 use Acme\Coin\Domain\Coin;
-use Acme\Coin\Domain\InvalidCoinException;
+use Acme\Coin\Domain\Exception\InvalidCoinException;
 use Acme\Shared\Domain\Bus\Command\CommandHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Symfony\Component\Messenger\MessageBusInterface;

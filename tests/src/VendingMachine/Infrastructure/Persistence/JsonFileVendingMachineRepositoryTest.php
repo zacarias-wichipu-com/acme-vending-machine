@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Acme\VendingMachine\Infrastructure\Persistence;
 
+use Acme\VendingMachine\Domain\Exception\VendorRepositoryException;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
-use Acme\VendingMachine\Domain\VendorRepositoryException;
 use Acme\VendingMachine\Infrastructure\Persistence\JsonFileVendingMachineRepository;
 use Tests\Acme\Shared\Infrastructure\PhpUnit\AppContextInfrastructureTestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;

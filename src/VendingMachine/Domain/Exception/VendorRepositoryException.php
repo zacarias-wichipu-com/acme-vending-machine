@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Acme\Coin\Domain;
+namespace Acme\VendingMachine\Domain\Exception;
 
 use DomainException;
 use Throwable;
 
-final class InvalidCoinException extends DomainException
+final class VendorRepositoryException extends DomainException
 {
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
