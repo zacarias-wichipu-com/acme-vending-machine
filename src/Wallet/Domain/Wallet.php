@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Acme\Wallet\Domain;
 
+use Acme\Coin\Domain\AmountInCents;
 use Acme\Coin\Domain\Coin;
 use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Wallet\Domain\Exception\InsufficientAmountException;
@@ -14,7 +15,8 @@ final class Wallet
     private function __construct(
         private Coins $exchangeCoins,
         private Coins $customerCoins,
-    ) {}
+    ) {
+    }
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins): static
     {
@@ -110,6 +112,18 @@ final class Wallet
                 message: 'We do not have enough exchange, you can select another product or request a refund of the coins.'
             );
         }
-
+        usort(
+            array: $flatAvailableExchange,
+            callback: static fn(array $a, array $b) => $a[array_key_first($a)] <=> $b[array_key_first($b)],
+        );
+        $this->exchangeCoins = Coins::create(
+            coinBox: array_map(
+                callback: static fn(array $flatCoinBox
+                ): CoinBox => CoinBox::create(Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
+                    $flatCoinBox[array_key_first($flatCoinBox)]),
+                array: $flatAvailableExchange
+            )
+        );
+        $this->customerCoins = Coins::create([]);
     }
 }
