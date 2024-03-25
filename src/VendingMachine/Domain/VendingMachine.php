@@ -13,7 +13,7 @@ use Acme\Wallet\Domain\Wallet;
 final class VendingMachine extends AggregateRoot
 {
     private function __construct(
-        private readonly Status $status,
+        private Status $status,
         private readonly Store $store,
         private readonly Wallet $wallet,
     ) {}
@@ -42,6 +42,19 @@ final class VendingMachine extends AggregateRoot
     public function status(): Status
     {
         return $this->status;
+    }
+
+    public function putInService(): void
+    {
+        if ($this->status === Status::IN_SERVICE) {
+            return;
+        }
+        $this->status = Status::IN_SERVICE;
+    }
+
+    public function setInService()
+    {
+        
     }
     public function store(): Store
     {
