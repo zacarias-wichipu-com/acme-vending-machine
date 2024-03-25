@@ -9,6 +9,7 @@ use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
+use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
 use Acme\Wallet\Domain\Wallet;
 
@@ -60,6 +61,16 @@ final class VendingMachine extends AggregateRoot
             return;
         }
         $this->status = Status::OPERATIONAL;
+    }
+    public function putInService(): void
+    {
+        if ($this->status === Status::IN_SERVICE) {
+            return;
+        }
+        if ($this->status === Status::SELLING) {
+            throw new ServiceModeUnavailable('You cannot enter service mode while a sales process is in progress. Cancel the purchase first.');
+        }
+        $this->status = Status::IN_SERVICE;
     }
 
     public function store(): Store
