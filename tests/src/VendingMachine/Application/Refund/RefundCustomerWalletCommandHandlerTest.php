@@ -8,11 +8,21 @@ use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommandHandler;
 use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class RefundCustomerWalletCommandHandlerTest extends TestCase
 {
+    private VendingMachineRepository&MockObject $repository;
+    private RefundCustomerWalletCommandHandler $handler;
+
+    protected function setUp(): void
+    {
+        $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
+        $this->handler = new RefundCustomerWalletCommandHandler(repository: $this->repository);
+    }
+
     /**
      * It Should Throw A Not Service Available Exception If Is Not In Service
      *
@@ -22,11 +32,9 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
     public function testItShouldThrowANotServiceAvailableExceptionIfIsNotInService(): void
     {
         $this->expectException(NotServiceAvailableException::class);
-        $repository = $this->createMock(VendingMachineRepository::class);
         $vendingMachine = VendingMachineMother::defaultMachine();
-        $repository->expects($this->once())->method('get')->willReturn($vendingMachine);
-        $repository->expects($this->never())->method('save')->with($vendingMachine);
-        $handler = new RefundCustomerWalletCommandHandler(repository: $repository);
-        ($handler)(new RefundCustomerWalletCommand());
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(new RefundCustomerWalletCommand());
     }
 }
