@@ -15,6 +15,7 @@ use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
 use Acme\Wallet\Domain\Exception\InsufficientAmountException;
+use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
 use Acme\Wallet\Domain\Wallet;
 use Exception;
 
@@ -67,6 +68,7 @@ final class VendingMachine extends AggregateRoot
         }
         $this->status = Status::OPERATIONAL;
     }
+
     public function putInService(): void
     {
         if ($this->status === Status::IN_SERVICE) {
@@ -87,16 +89,21 @@ final class VendingMachine extends AggregateRoot
     {
         return $this->wallet;
     }
+
     public function exchangeAmount(): int
     {
         return $this->wallet->exchangeAmount();
+    }
+
+    public function exchangeCoins(): Coins
+    {
+        return $this->wallet->exchangeCoins();
     }
 
     public function customerAmount(): int
     {
         return $this->wallet->customerAmount();
     }
-
     public function customerCoins(): Coins
     {
         return $this->wallet->customerCoins();
@@ -130,6 +137,7 @@ final class VendingMachine extends AggregateRoot
     public function buyProduct(ProductType $product): void
     {
         $this->ensureBuyBalance($product);
+        $this->ensureBuyExchange($product);
     }
 
     private function ensureBuyBalance(ProductType $product): void
@@ -144,6 +152,36 @@ final class VendingMachine extends AggregateRoot
                     $product->value,
                     CurrencyUtils::toDecimalString($productPrice - $customerAmount),
                 )
+            );
+        }
+    }
+
+    private function ensureBuyExchange(ProductType $product): void
+    {
+        $productPrice = $this->store()->priceFrom(product: $product);
+        $customerAmount = $this->customerAmount();
+        $exchangeAmount = $customerAmount - $productPrice;
+        if ($exchangeAmount === 0) {
+            return;
+        }
+        $flatExchange = $this->exchangeCoins()->flatCoins();
+        $flatAvailableExchange = $flatExchange;
+        $flatCustomerExchange = [];
+        foreach ($flatAvailableExchange as $index => $coins) {
+            $coinAmount = array_key_first($coins);
+            $availableCoinQuantity = $coins[$coinAmount];
+            if ($exchangeAmount >= $coinAmount) {
+                $customerCoinQuantity = min($availableCoinQuantity, intdiv($exchangeAmount, $coinAmount));
+                $availableCoinQuantity -= $customerCoinQuantity;
+                $exchangeAmount -= $customerCoinQuantity * $coinAmount;
+                unset($flatAvailableExchange[$index]);
+                $flatAvailableExchange[] = [$coinAmount => $availableCoinQuantity];
+                $flatCustomerExchange[] = [$coinAmount => $customerCoinQuantity];
+            }
+        }
+        if ($exchangeAmount > 0) {
+            throw new InsufficientExchangeException(
+                message: 'We do not have enough exchange, you can select another product or request a refund of the coins.'
             );
         }
     }

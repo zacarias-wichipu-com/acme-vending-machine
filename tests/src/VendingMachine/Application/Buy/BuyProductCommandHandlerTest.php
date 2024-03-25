@@ -157,6 +157,12 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
                 ]
             ),
             wallet: VendingMachineMother::randomWallet(
+                exchangeCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TEN, quantity: 5),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 10),
+                    ]
+                ),
                 customerCoins: VendingMachineMother::randomCoins(
                     coinBoxes: [
                         VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 1),

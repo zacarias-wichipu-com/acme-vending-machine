@@ -71,4 +71,17 @@ final class Coins extends Collection
             0
         );
     }
+
+    public function flatCoins(): array
+    {
+        $coins = array_map(
+            callback: static fn(CoinBox $coinBox): array => [$coinBox->coin()->amountInCents()->value => $coinBox->quantity()],
+            array: $this->items()
+        );
+        usort(
+            array: $coins,
+            callback: static fn(array $a, array $b) => array_key_first($a) <=> array_key_first($b),
+        );
+        return $coins;
+    }
 }

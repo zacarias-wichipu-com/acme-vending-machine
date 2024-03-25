@@ -48,8 +48,7 @@ final class VendingMachineMother
         ?Product $product = null,
         ?int $price = null,
         ?int $quantity = null,
-    ): Rack
-    {
+    ): Rack {
         return Rack::create(
             product: $product ?: static::randomProduct(),
             price: $price ?: MotherCreator::random()->numberBetween(1, 1000),
