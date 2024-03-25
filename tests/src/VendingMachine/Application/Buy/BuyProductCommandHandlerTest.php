@@ -13,6 +13,7 @@ use Acme\VendingMachine\Application\Buy\BuyProductCommandHandler;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use Acme\Wallet\Domain\Exception\InsufficientAmountException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\Shared\Infrastructure\Bus\Event\InMemoryEventBus;

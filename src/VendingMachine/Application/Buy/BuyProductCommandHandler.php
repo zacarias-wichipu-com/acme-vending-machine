@@ -16,18 +16,17 @@ use Throwable;
 
 final readonly class BuyProductCommandHandler implements CommandHandler
 {
-
     public function __construct(
         private VendingMachineRepository $repository,
         private MessageBusInterface $eventBus
-    ) {
-    }
+    ) {}
 
     public function __invoke(BuyProductCommand $command): void
     {
         $vendingMachine = $this->repository->get();
         $this->ensureCaseFrom(vendingMachine: $vendingMachine);
-        $this->productFrom(product: $command->product);
+        $product = $this->productFrom(product: $command->product);
+        $vendingMachine->buyProduct(product: $product);
     }
 
     private function ensureCaseFrom(VendingMachine $vendingMachine): void

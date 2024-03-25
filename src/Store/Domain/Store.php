@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Acme\Store\Domain;
 
+use Acme\Product\Domain\Exception\InvalidProductException;
+use Acme\Product\Domain\ProductType;
+use Exception;
+
 final readonly class Store
 {
     /**
@@ -31,5 +35,19 @@ final readonly class Store
     public function racks(): Racks
     {
         return $this->racks;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function priceFrom(ProductType $product): int
+    {
+        /** @var Rack $rack */
+        foreach ($this->racks()->getIterator() as $rack) {
+            if ($rack->product()->type() === $product) {
+                return $rack->price();
+            }
+        }
+        throw new InvalidProductException(message: sprintf('There has been an error, we are unable to deliver the product %1$s (error: product price unknown).', $product->value));
     }
 }

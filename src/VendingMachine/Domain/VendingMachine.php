@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Acme\VendingMachine\Domain;
 
 use Acme\Coin\Domain\Coin;
+use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
+use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
+use Acme\Wallet\Domain\Exception\InsufficientAmountException;
 use Acme\Wallet\Domain\Wallet;
+use Exception;
 
 final class VendingMachine extends AggregateRoot
 {
@@ -118,5 +122,29 @@ final class VendingMachine extends AggregateRoot
         $this->record(domainEvent: new CustomerCoinsWasRefundedEvent(
             coinsAmount: $coinsAmount
         ));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function buyProduct(ProductType $product): void
+    {
+        $this->ensureBuyBalance($product);
+    }
+
+    private function ensureBuyBalance(ProductType $product): void
+    {
+        $productPrice = $this->store()->priceFrom(product: $product);
+        $customerAmount = $this->customerAmount();
+        if ($customerAmount < $productPrice) {
+            throw new InsufficientAmountException(
+                message: sprintf(
+                    'The balance %1$s is insufficient for product %2$s, please add %3$s more to complete the amount.',
+                    CurrencyUtils::toDecimalString($customerAmount),
+                    $product->value,
+                    CurrencyUtils::toDecimalString($productPrice - $customerAmount),
+                )
+            );
+        }
     }
 }
