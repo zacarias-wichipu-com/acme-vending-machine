@@ -89,10 +89,12 @@ final class VendingMachineMother
     public static function randomWallet(
         ?Coins $exchangeCoins = null,
         ?Coins $customerCoins = null,
+        ?Coins $refundCoins = null,
     ): Wallet {
         return Wallet::create(
             exchangeCoins: $exchangeCoins ?: self::randomCoins(),
-            customerCoins: $customerCoins ?: self::noCoins()
+            customerCoins: $customerCoins ?: self::noCoins(),
+            refundCoins: $refundCoins ?: self::noCoins(),
         );
     }
 

@@ -41,7 +41,8 @@ class WalletTest extends TestCase
         ]);
         $wallet = Wallet::create(
             exchangeCoins: Coins::create([]),
-            customerCoins: $initialCustomerCoins
+            customerCoins: $initialCustomerCoins,
+            refundCoins: Coins::create([]),
         );
         $wallet->addCustomerCoin(coin: Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED));
         $updatedCustomerCoins = $wallet->customerCoins();
@@ -67,7 +68,8 @@ class WalletTest extends TestCase
         ]);
         $wallet = Wallet::create(
             exchangeCoins: Coins::create([]),
-            customerCoins: $initialCustomerCoins
+            customerCoins: $initialCustomerCoins,
+            refundCoins: Coins::create([]),
         );
 
         $wallet->addCustomerCoin(coin: Coin::createFromAmountInCents(AmountInCents::TEN));
@@ -96,7 +98,8 @@ class WalletTest extends TestCase
                     CoinBox::create(Coin::createFromAmountInCents(AmountInCents::TWENTY_FIVE), 1),
                     CoinBox::create(Coin::createFromAmountInCents(AmountInCents::TEN), 1),
                 ]),
-                customerCoins: Coins::create([])
+                customerCoins: Coins::create([]),
+                refundCoins: Coins::create([]),
             ),
             135,
         ];
@@ -106,7 +109,8 @@ class WalletTest extends TestCase
                     CoinBox::create(Coin::createFromAmountInCents(AmountInCents::FIVE), 1),
                     CoinBox::create(Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED), 5),
                 ]),
-                customerCoins: Coins::create([])
+                customerCoins: Coins::create([]),
+                refundCoins: Coins::create([]),
             ),
             505,
         ];

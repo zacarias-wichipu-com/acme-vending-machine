@@ -62,6 +62,7 @@ final readonly class VendingMachineResponse implements Response
         return [
             'exchangeCoins' => $this->exchangeCoins(),
             'customerCoins' => $this->customerCoins(),
+            'refundCoins' => $this->customerCoins(),
         ];
     }
 
@@ -73,6 +74,11 @@ final readonly class VendingMachineResponse implements Response
     public function customerCoins(): array
     {
         return $this->coins(coins: $this->vendingMachine->wallet()->customerCoins());
+    }
+
+    public function refundCoins(): array
+    {
+        return $this->coins(coins: $this->vendingMachine->wallet()->refundCoins());
     }
 
     private function coins(Coins $coins): array

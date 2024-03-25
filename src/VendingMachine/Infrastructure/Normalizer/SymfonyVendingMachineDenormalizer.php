@@ -51,6 +51,12 @@ final readonly class SymfonyVendingMachineDenormalizer implements DenormalizerIn
                         array: $data->wallet->customerCoins
                     )
                 ),
+                refundCoins: Coins::create(
+                    coinBox: array_map(
+                        callback: static fn(stdClass $coinBox): CoinBox => CoinBox::create(Coin::createFromAmountInCents(AmountInCents::from($coinBox->coin->amountInCents->value)), $coinBox->quantity),
+                        array: $data->wallet->refundCoins
+                    )
+                ),
             )
         );
     }

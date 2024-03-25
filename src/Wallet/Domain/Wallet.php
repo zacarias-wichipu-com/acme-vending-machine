@@ -15,14 +15,16 @@ final class Wallet
     private function __construct(
         private Coins $exchangeCoins,
         private Coins $customerCoins,
+        private Coins $refundCoins,
     ) {
     }
 
-    public static function create(Coins $exchangeCoins, Coins $customerCoins): static
+    public static function create(Coins $exchangeCoins, Coins $customerCoins, Coins $refundCoins): static
     {
         return new static(
             exchangeCoins: $exchangeCoins,
             customerCoins: $customerCoins,
+            refundCoins: $refundCoins,
         );
     }
 
@@ -31,6 +33,7 @@ final class Wallet
         return static::create(
             exchangeCoins: Coins::createDefaultExchange(),
             customerCoins: Coins::create([]),
+            refundCoins: Coins::create([]),
         );
     }
 
@@ -44,6 +47,11 @@ final class Wallet
         return $this->customerCoins;
     }
 
+    public function refundCoins(): Coins
+    {
+        return $this->refundCoins;
+    }
+
     public function exchangeAmount(): int
     {
         return $this->exchangeCoins->amount();
@@ -52,6 +60,11 @@ final class Wallet
     public function customerAmount(): int
     {
         return $this->customerCoins->amount();
+    }
+
+    public function refundAmount(): int
+    {
+        return $this->refundCoins->amount();
     }
 
     public function addCustomerCoin(Coin $coin): void

@@ -29,12 +29,12 @@ final class PrintVendingMachineCommand extends Command
         $io->text([
             '<fg=bright-magenta>--> Print vending machine.</>'
         ]);
-        /** @var VendingMachineResponse $vendingMachine */
-        $vendingMachine = $this->bus->ask(new GetVendingMachineQuery());
+        /** @var VendingMachineResponse $vendingMachineResponse */
+        $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
         $io->text([
-            sprintf('<fg=blue>Machine status</>: %1$s', $vendingMachine->status()),
-            sprintf('<fg=blue>Exchange amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachine->exchangeAmount())),
-            sprintf('<fg=blue>Customer amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachine->customerAmount())),
+            sprintf('<fg=blue>Machine status</>: %1$s', $vendingMachineResponse->status()),
+            sprintf('<fg=blue>Exchange amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachineResponse->exchangeAmount())),
+            sprintf('<fg=blue>Customer amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachineResponse->customerAmount())),
             '',
             "<fg=blue>Store:</> ",
         ]);
@@ -46,7 +46,7 @@ final class PrintVendingMachineCommand extends Command
             ],
             rows: array_map(
                 callback: static fn($rack): array => [$rack['product'], CurrencyUtils::toDecimalString($rack['price']), $rack['quantity']],
-                array: $vendingMachine->store()
+                array: $vendingMachineResponse->store()
             )
         );
         $io->text([
@@ -59,7 +59,7 @@ final class PrintVendingMachineCommand extends Command
             ],
             rows: array_map(
                 callback: static fn($coin): array => [CurrencyUtils::toDecimalString($coin['coin']), $coin['quantity']],
-                array: $vendingMachine->exchangeCoins()
+                array: $vendingMachineResponse->exchangeCoins()
             )
         );
         $io->text([
@@ -72,7 +72,7 @@ final class PrintVendingMachineCommand extends Command
             ],
             rows: array_map(
                 callback: static fn($coin): array => [CurrencyUtils::toDecimalString($coin['coin']), $coin['quantity']],
-                array: $vendingMachine->customerCoins()
+                array: $vendingMachineResponse->customerCoins()
             )
         );
         return Command::SUCCESS;
