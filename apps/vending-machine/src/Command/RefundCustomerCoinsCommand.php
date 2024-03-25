@@ -9,7 +9,7 @@ use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
 use Acme\VendingMachine\Application\VendingMachineResponse;
-use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
+use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -44,9 +44,9 @@ final class RefundCustomerCoinsCommand extends Command
         );
         try {
             $this->bus->dispatch(command: new RefundCustomerWalletCommand());
-        } catch (NotServiceAvailableException) {
+        } catch (NotInSellingModeException $exception) {
             $io->text([
-                '<fg=bright-green>-->--> No coins to refund.</>'
+                sprintf('<fg=bright-red>-->--> %1$s</>', $exception->getMessage())
             ]);
             return Command::SUCCESS;
         }

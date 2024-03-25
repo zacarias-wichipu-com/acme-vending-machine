@@ -6,7 +6,7 @@ namespace Tests\Acme\VendingMachine\Application\Refund;
 
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommandHandler;
-use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
+use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,7 +36,7 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
      */
     public function testItShouldThrowANotServiceAvailableExceptionIfIsNotInService(): void
     {
-        $this->expectException(NotServiceAvailableException::class);
+        $this->expectException(NotInSellingModeException::class);
         $vendingMachine = VendingMachineMother::defaultMachine();
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);

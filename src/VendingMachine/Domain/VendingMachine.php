@@ -9,6 +9,7 @@ use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
+use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
 use Acme\Wallet\Domain\Wallet;
@@ -107,8 +108,11 @@ final class VendingMachine extends AggregateRoot
         );
     }
 
-    public function refundCustomerCoins()
+    public function refundCustomerCoins(): void
     {
+        if ($this->status !== Status::SELLING) {
+            throw new NotInSellingModeException(message: 'There are no sales processes in progress to refund.');
+        }
         $coinsAmount = $this->customerAmount();
         $this->wallet()->refundCustomerCoins();
         $this->record(domainEvent: new CustomerCoinsWasRefundedEvent(

@@ -9,11 +9,23 @@ use Acme\VendingMachine\Application\Service\EnableServiceModeCommandHandler;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class EnableServiceModeCommandHandlerTest extends TestCase
 {
+    private VendingMachineRepository&MockObject $repository;
+    private EnableServiceModeCommandHandler $handler;
+
+    protected function setUp(): void
+    {
+        $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
+        $this->handler = new EnableServiceModeCommandHandler(
+            repository: $this->repository,
+        );
+    }
+
     /**
      * It Should Throw A Service Mode Unavailable Whe The Machine Is In Use
      *
@@ -26,10 +38,23 @@ class EnableServiceModeCommandHandlerTest extends TestCase
         $vendingMachine = VendingMachineMother::randomMachine(
             status: Status::SELLING
         );
-        $repository = $this->createMock(originalClassName: VendingMachineRepository::class);
-        $repository->expects($this->once())->method('get')->willReturn($vendingMachine);
-        $repository->expects($this->never())->method('save')->with($vendingMachine);
-        $handler = new EnableServiceModeCommandHandler($repository);
-        ($handler)(new EnableServiceModeCommand());
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(new EnableServiceModeCommand());
+    }
+
+    /**
+     * It Should Put The Machine In Service Mode
+     *
+     * @group enable_service_mode_command_handler
+     * @group unit
+     */
+    public function testItShouldPutTheMachineInServiceMode(): void
+    {
+        $vendingMachine = VendingMachineMother::randomMachine();
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->once())->method('save')->with($vendingMachine);
+        ($this->handler)(new EnableServiceModeCommand());
+        $this->assertEquals(expected: Status::IN_SERVICE, actual: $vendingMachine->status());
     }
 }

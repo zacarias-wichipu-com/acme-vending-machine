@@ -6,6 +6,7 @@ namespace Acme\Ui\Cli\Command;
 
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Service\EnableServiceModeCommand;
+use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -28,7 +29,14 @@ final class EnableVendingMachineServiceModeCommand extends Command
         $io->text([
             '<fg=bright-magenta>--> Enable service mode.</>',
         ]);
-        $this->bus->dispatch(command: new EnableServiceModeCommand());
+        try {
+            $this->bus->dispatch(command: new EnableServiceModeCommand());
+        } catch (ServiceModeUnavailable $exception) {
+            $io->text([
+                sprintf('<fg=bright-red>-->--> %1$s</>', $exception->getMessage()),
+            ]);
+            return Command::SUCCESS;
+        }
         $io->text([
             '<fg=bright-green>-->--> Service mode enabled.</>',
         ]);

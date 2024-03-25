@@ -19,7 +19,7 @@ use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class AddCoinToCustomerWalletCommandHandlerTest extends TestCase
 {
-    private VendingMachineRepository|MockObject $repository;
+    private VendingMachineRepository&MockObject $repository;
     private AddCoinToCustomerWalletCommandHandler $handler;
 
     /**
