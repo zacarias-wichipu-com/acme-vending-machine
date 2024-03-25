@@ -9,6 +9,7 @@ use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
 use Acme\VendingMachine\Application\VendingMachineResponse;
+use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -34,16 +35,25 @@ final class RefundCustomerCoinsCommand extends Command
         /** @var VendingMachineResponse $vendingMachineResponse */
         $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
         $refundedAmount = $vendingMachineResponse->customerAmount();
-        $refundedCoins = $vendingMachineResponse->customerCoins();
         $refundedCoins = array_reduce(
             array: $vendingMachineResponse->customerCoins(),
-            callback: static fn(array $carry, array $coins): array => [...$carry, ...array_fill(0, $coins['quantity'], CurrencyUtils::toDecimalString($coins['coin']))],
+            callback: static fn(array $carry, array $coins): array => [
+                ...$carry, ...array_fill(0, $coins['quantity'], CurrencyUtils::toDecimalString($coins['coin'])),
+            ],
             initial: []
         );
-        $this->bus->dispatch(command: new RefundCustomerWalletCommand());
+        try {
+            $this->bus->dispatch(command: new RefundCustomerWalletCommand());
+        } catch (NotServiceAvailableException) {
+            $io->text([
+                '<fg=bright-green>-->--> No coins to refund.</>'
+            ]);
+            return Command::SUCCESS;
+        }
         $io->text([
-            sprintf('<fg=bright-green>-->--> Amount refunded %1$s (coins: %2$s).</>', CurrencyUtils::toDecimalString($refundedAmount), implode(', ',
-                $refundedCoins)),
+            sprintf('<fg=bright-green>-->--> Amount refunded %1$s (coins: %2$s).</>',
+                CurrencyUtils::toDecimalString($refundedAmount), implode(', ',
+                    $refundedCoins)),
         ]);
         $printInput = new ArrayInput([
             'command' => 'machine:print',
