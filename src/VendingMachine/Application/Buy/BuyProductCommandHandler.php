@@ -51,7 +51,7 @@ final readonly class BuyProductCommandHandler implements CommandHandler
         } catch (Throwable) {
             throw new InvalidProductException(
                 message: sprintf(
-                    '%1$s i not a valid product.',
+                    '%1$s is not a valid product.',
                     $product,
                 )
             );

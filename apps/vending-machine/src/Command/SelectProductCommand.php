@@ -9,6 +9,7 @@ use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Buy\BuyProductCommand;
 use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\VendingMachineResponse;
+use DomainException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -48,7 +49,7 @@ final class SelectProductCommand extends Command
             values: $choicesOptionAllowed
         );
         $choicesValueAllowed = array_map(
-            callback: static fn(array $rack): string => sprintf('%1$s (price: %2$s, stock: %3$d)', $rack['product'], CurrencyUtils::toDecimalString($rack['price']), $rack['quantity']),
+            callback: static fn(array $rack): string => $rack['product'],
             array: $vendingMachine->store(),
         );
         $choicesValueAllowed = array_combine(
@@ -70,7 +71,14 @@ final class SelectProductCommand extends Command
             ]);
             return Command::SUCCESS;
         }
-        $this->bus->dispatch(command: new BuyProductCommand(product: $choicesValueAllowed[$choiceKey]));
+        try {
+            $this->bus->dispatch(command: new BuyProductCommand(product: $choicesValueAllowed[$choiceKey]));
+        } catch (DomainException $exception) {
+            $io->text([
+                sprintf('<fg=bright-red>-->--> %1$s</>', $exception->getMessage())
+            ]);
+            return Command::SUCCESS;
+        }
         $io->text([
             sprintf('<fg=bright-green>--> --> Inserted a %1$s coin.</>', $choice),
         ]);

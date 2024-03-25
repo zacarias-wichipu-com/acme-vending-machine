@@ -37,19 +37,19 @@ final class Coins extends Collection
         return static::create([
             CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::FIVE),
-                quantity: 5
+                quantity: 10
             ),
             CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::TEN),
-                quantity: 3
+                quantity: 10
             ),
             CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::TWENTY_FIVE),
-                quantity: 2
+                quantity: 10
             ),
             CoinBox::create(
                 coin: Coin::createFromAmountInCents(amountInCents: AmountInCents::ONE_HUNDRED),
-                quantity: 1
+                quantity: 5
             ),
         ]);
     }

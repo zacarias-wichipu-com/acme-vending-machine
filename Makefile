@@ -172,11 +172,14 @@ vm-customer-add-coin: VENDING_MACHINE_COMMAND=customer\:coin\:add ## Customer ad
 .PHONY: vm-customer-refund-coins
 vm-customer-refund-coins: VENDING_MACHINE_COMMAND=customer\:coins\:refund ## Refund customer coins
 
+.PHONY: vm-customer-buy-product
+vm-customer-buy-product: VENDING_MACHINE_COMMAND=customer\:product\:select ## Buy a product
+
 .PHONY: vm-service-mode-enable
 vm-service-mode-enable: VENDING_MACHINE_COMMAND=service\:enable ## Enable vending machine service mode
 
 .PHONY: vm-service-mode-disable
 vm-service-mode-disable: VENDING_MACHINE_COMMAND=service\:disable ## Disable vending machine service mode
 
-vm vm-init vm-print vm-customer-add-coin vm-customer-refund-coins vm-service-mode-enable vm-service-mode-disable:
+vm vm-init vm-print vm-customer-add-coin vm-customer-refund-coins vm-customer-buy-product vm-service-mode-enable vm-service-mode-disable:
 	@docker exec -it php bin/vending-machine ${VENDING_MACHINE_COMMAND}

@@ -60,8 +60,8 @@ final class Store
             if ($rack->product()->type() === $product) {
                 unset($racks[$index]);
                 if ($rack->quantity() > 1) {
-                    $racks[] = Rack::create($rack->product(), $rack->price(), $rack->price() - 1);
-                    $this->racks = Racks::create($racks);
+                    $racks[] = Rack::create($rack->product(), $rack->price(), $rack->quantity() - 1);
+                    $this->racks = Racks::create(array_values($racks));
                 }
                 return;
             }

@@ -128,32 +128,30 @@ final class Wallet
             array: $flatAvailableExchange,
             callback: static fn(array $a, array $b) => $a[array_key_first($a)] <=> $b[array_key_first($b)],
         );
-        $this->exchangeCoins = Coins::create(
-            coinBox: array_map(
-                callback: static fn(
-                    array $flatCoinBox
-                ): CoinBox => CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
-                    $flatCoinBox[array_key_first($flatCoinBox)]
-                ),
-                array: $flatAvailableExchange
-            )
+        $updateExchangeCoinBoxes = array_map(
+            callback: static fn(
+                array $flatCoinBox
+            ): CoinBox => CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
+                $flatCoinBox[array_key_first($flatCoinBox)]
+            ),
+            array: $flatAvailableExchange
         );
         usort(
             array: $flatCustomerExchange,
             callback: static fn(array $a, array $b) => $a[array_key_first($a)] <=> $b[array_key_first($b)],
         );
-        $this->refundCoins = Coins::create(
-            coinBox: array_map(
-                callback: static fn(
-                    array $flatCoinBox
-                ): CoinBox => CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
-                    $flatCoinBox[array_key_first($flatCoinBox)]
-                ),
-                array: $flatCustomerExchange
-            )
+        $refundCoinBoxes = array_map(
+            callback: static fn(
+                array $flatCoinBox
+            ): CoinBox => CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
+                $flatCoinBox[array_key_first($flatCoinBox)]
+            ),
+            array: $flatCustomerExchange
         );
+        $this->exchangeCoins = Coins::create(coinBox: array_values($updateExchangeCoinBoxes));
+        $this->refundCoins = Coins::create(coinBox: array_values($refundCoinBoxes));
         $this->customerCoins = Coins::create([]);
     }
 }
