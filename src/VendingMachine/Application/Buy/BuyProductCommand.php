@@ -8,7 +8,7 @@ use Acme\Shared\Domain\Bus\Command\Command;
 
 final readonly class BuyProductCommand implements Command
 {
-    public function __construct(public string $choiceKey)
+    public function __construct(public string $product)
     {
     }
 }
