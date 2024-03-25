@@ -17,6 +17,7 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
      * It Should Throw A Not Service Available Exception If Is Not In Service
      *
      * @group refund_customer_wallet_command_handler
+     * @group unit
      */
     public function testItShouldThrowANotServiceAvailableExceptionIfIsNotInService(): void
     {
