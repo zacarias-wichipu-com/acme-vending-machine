@@ -13,6 +13,9 @@ services:
         Acme\Shared\Domain\Bus\Query\QueryHandler:
             tags:
                 - {name: messenger.message_handler, bus: query.bus}
+        Acme\Shared\Domain\Bus\Event\DomainEventSubscriber:
+            tags:
+                - {name: messenger.message_handler, bus: event.bus}
     Acme\VendingMachine\:
         resource: '%context.root_path%/src/VendingMachine/{Application,Domain,Infrastructure}/*'
     Acme\VendingMachine\Infrastructure\Persistence\JsonFileVendingMachineRepository:

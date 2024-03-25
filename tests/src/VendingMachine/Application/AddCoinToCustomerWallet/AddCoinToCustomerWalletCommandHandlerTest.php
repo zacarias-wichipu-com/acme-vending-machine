@@ -7,16 +7,18 @@ namespace Tests\Acme\VendingMachine\Application\AddCoinToCustomerWallet;
 use Acme\Coin\Domain\AmountInCents;
 use Acme\Coin\Domain\InvalidCoinException;
 use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommand;
+use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommandHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Tests\Acme\Shared\Infrastructure\Bus\Event\InMemoryEventBus;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class AddCoinToCustomerWalletCommandHandlerTest extends TestCase
 {
     private VendingMachineRepository|MockObject $repository;
-    private \Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommandHandler $handler;
+    private AddCoinToCustomerWalletCommandHandler $handler;
 
     /**
      * @throws Exception
@@ -24,7 +26,10 @@ class AddCoinToCustomerWalletCommandHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
-        $this->handler = new \Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommandHandler(repository: $this->repository);
+        $this->handler = new AddCoinToCustomerWalletCommandHandler(
+            repository: $this->repository,
+            eventBus: new InMemoryEventBus()
+        );
     }
 
     /**

@@ -6,7 +6,8 @@ namespace Acme\Shared\Domain\Aggregate;
 
 use Acme\Shared\Domain\Bus\Event\DomainEvent;
 
-abstract class AggregateRoot {
+abstract class AggregateRoot
+{
     private array $domainEvents = [];
 
     final public function pullDomainEvents(): array

@@ -27,8 +27,7 @@ final class CustomerHasInsertACoinEvent extends DomainEvent
         array $body,
         string $eventId,
         string $occurredOn
-    ): DomainEvent
-    {
+    ): DomainEvent {
         return new static(
             $body['coinAmount'],
             $eventId,

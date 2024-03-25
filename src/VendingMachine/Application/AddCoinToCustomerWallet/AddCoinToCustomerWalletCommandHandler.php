@@ -9,12 +9,14 @@ use Acme\Coin\Domain\Coin;
 use Acme\Coin\Domain\InvalidCoinException;
 use Acme\Shared\Domain\Bus\Command\CommandHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
 
 final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHandler
 {
     public function __construct(
-        private VendingMachineRepository $repository
+        private VendingMachineRepository $repository,
+        private MessageBusInterface $eventBus
     ) {}
 
     public function __invoke(AddCoinToCustomerWalletCommand $command): void
@@ -25,6 +27,9 @@ final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHan
             coin: Coin::createFromAmountInCents(amountInCents: $amountInCents)
         );
         $this->repository->save($vendingMachine);
+        foreach ($vendingMachine->pullDomainEvents() as $domainEvent) {
+            $this->eventBus->dispatch($domainEvent);
+        }
     }
 
     private function amountInCents(int $amount): AmountInCents
