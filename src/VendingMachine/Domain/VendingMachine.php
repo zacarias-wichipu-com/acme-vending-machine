@@ -7,15 +7,13 @@ namespace Acme\VendingMachine\Domain;
 use Acme\Coin\Domain\Coin;
 use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
-use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Store\Domain\Store;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
+use Acme\VendingMachine\Domain\Event\ProductWasSoldEvent;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
-use Acme\Wallet\Domain\Exception\InsufficientAmountException;
-use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
 use Acme\Wallet\Domain\Wallet;
 use Exception;
 
@@ -137,57 +135,10 @@ final class VendingMachine extends AggregateRoot
     public function buyProduct(ProductType $product): void
     {
         $this->store()->updateOnBuy(product: $product);
-        $this->wallet()->updateOnBuy(productName: $product->value, productPrice: $this->store()->priceFrom(product: $product));
-        //        $this->ensureBuyBalance($product);
-        //        $this->ensureBuyExchange($product);
-        // Update exchange wallet
-        // Reset customer wallet
-        // Record ProductWasBoughtDomainEvent
-    }
-
-    private function ensureBuyBalance(ProductType $product): void
-    {
         $productPrice = $this->store()->priceFrom(product: $product);
-        $customerAmount = $this->customerAmount();
-        if ($customerAmount < $productPrice) {
-            throw new InsufficientAmountException(
-                message: sprintf(
-                    'The balance %1$s is insufficient for product %2$s, please add %3$s more to complete the amount.',
-                    CurrencyUtils::toDecimalString($customerAmount),
-                    $product->value,
-                    CurrencyUtils::toDecimalString($productPrice - $customerAmount),
-                )
-            );
-        }
-    }
-
-    private function ensureBuyExchange(ProductType $product): void
-    {
-        $productPrice = $this->store()->priceFrom(product: $product);
-        $customerAmount = $this->customerAmount();
-        $exchangeAmount = $customerAmount - $productPrice;
-        if ($exchangeAmount === 0) {
-            return;
-        }
-        $flatExchange = $this->exchangeCoins()->flatCoins();
-        $flatAvailableExchange = $flatExchange;
-        $flatCustomerExchange = [];
-        foreach ($flatAvailableExchange as $index => $coins) {
-            $coinAmount = array_key_first($coins);
-            $availableCoinQuantity = $coins[$coinAmount];
-            if ($exchangeAmount >= $coinAmount) {
-                $customerCoinQuantity = min($availableCoinQuantity, intdiv($exchangeAmount, $coinAmount));
-                $availableCoinQuantity -= $customerCoinQuantity;
-                $exchangeAmount -= $customerCoinQuantity * $coinAmount;
-                unset($flatAvailableExchange[$index]);
-                $flatAvailableExchange[] = [$coinAmount => $availableCoinQuantity];
-                $flatCustomerExchange[] = [$coinAmount => $customerCoinQuantity];
-            }
-        }
-        if ($exchangeAmount > 0) {
-            throw new InsufficientExchangeException(
-                message: 'We do not have enough exchange, you can select another product or request a refund of the coins.'
-            );
-        }
+        $this->wallet()->updateOnBuy(productName: $product->value, productPrice: $productPrice);
+        $this->record(
+            domainEvent: new ProductWasSoldEvent(productName: $product->value, productPrice: $productPrice)
+        );
     }
 }

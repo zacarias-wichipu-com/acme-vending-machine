@@ -16,8 +16,7 @@ final class Wallet
         private Coins $exchangeCoins,
         private Coins $customerCoins,
         private Coins $refundCoins,
-    ) {
-    }
+    ) {}
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins, Coins $refundCoins): static
     {
@@ -131,9 +130,12 @@ final class Wallet
         );
         $this->exchangeCoins = Coins::create(
             coinBox: array_map(
-                callback: static fn(array $flatCoinBox
-                ): CoinBox => CoinBox::create(Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
-                    $flatCoinBox[array_key_first($flatCoinBox)]),
+                callback: static fn(
+                    array $flatCoinBox
+                ): CoinBox => CoinBox::create(
+                    Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
+                    $flatCoinBox[array_key_first($flatCoinBox)]
+                ),
                 array: $flatAvailableExchange
             )
         );
@@ -143,9 +145,12 @@ final class Wallet
         );
         $this->refundCoins = Coins::create(
             coinBox: array_map(
-                callback: static fn(array $flatCoinBox
-                ): CoinBox => CoinBox::create(Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
-                    $flatCoinBox[array_key_first($flatCoinBox)]),
+                callback: static fn(
+                    array $flatCoinBox
+                ): CoinBox => CoinBox::create(
+                    Coin::createFromAmountInCents(AmountInCents::from(array_key_first($flatCoinBox))),
+                    $flatCoinBox[array_key_first($flatCoinBox)]
+                ),
                 array: $flatCustomerExchange
             )
         );

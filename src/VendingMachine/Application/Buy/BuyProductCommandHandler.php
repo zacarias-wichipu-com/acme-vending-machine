@@ -32,6 +32,9 @@ final readonly class BuyProductCommandHandler implements CommandHandler
         $product = $this->productFrom(product: $command->product);
         $vendingMachine->buyProduct(product: $product);
         $this->repository->save($vendingMachine);
+        foreach ($vendingMachine->pullDomainEvents() as $domainEvent) {
+            $this->eventBus->dispatch($domainEvent);
+        }
     }
 
     private function ensureCaseFrom(VendingMachine $vendingMachine): void
