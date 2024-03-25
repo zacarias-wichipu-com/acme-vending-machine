@@ -22,6 +22,11 @@ final class CustomerHasInsertACoinEvent extends DomainEvent
         return 'customer.coin.add';
     }
 
+    public function coinAmount(): int
+    {
+        return $this->cointAmount;
+    }
+
     #[\Override]
     public static function fromPrimitives(
         array $body,
