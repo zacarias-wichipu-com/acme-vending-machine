@@ -16,7 +16,8 @@ final readonly class VendingMachineResponse implements Response
 {
     public function __construct(
         private VendingMachine $vendingMachine,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function toArray(): array
@@ -77,12 +78,17 @@ final readonly class VendingMachineResponse implements Response
 
     private function coins(Coins $coins): array
     {
-        return array_map(
+        $coins = array_map(
             callback: fn(CoinBox $coinBox): array => [
                 'coin' => $this->coinToArray($coinBox->coin()), 'quantity' => $coinBox->quantity(),
             ],
             array: (array) $coins->getIterator()
         );
+        usort(
+            array: $coins,
+            callback: static fn(array $a, array $b) => $a['coin'] <=> $b['coin'],
+        );
+        return $coins;
     }
 
     private function coinToArray(Coin $coin): int
