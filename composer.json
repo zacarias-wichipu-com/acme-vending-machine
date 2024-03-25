@@ -24,7 +24,8 @@
     "symfony/validator": "^7",
     "symfony/serializer": "7",
     "symfony/property-access": "7",
-    "lambdish/phunctional": "^2.1"
+    "lambdish/phunctional": "^2.1",
+    "symfony/monolog-bundle": "^3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

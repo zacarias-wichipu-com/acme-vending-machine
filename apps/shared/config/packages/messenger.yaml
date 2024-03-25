@@ -14,3 +14,7 @@ framework:
                     allow_no_handlers: true
                 middleware:
                     - validation
+        transports:
+            event.sync: 'sync://'
+        routing:
+            Acme\Shared\Domain\Bus\Event\DomainEvent: event.sync
