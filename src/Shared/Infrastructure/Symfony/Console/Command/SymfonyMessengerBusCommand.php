@@ -17,8 +17,7 @@ final readonly class SymfonyMessengerBusCommand implements BusCommand
     public function __construct(
         private MessageBusInterface $commandBus,
         private MessageBusInterface $queryBus,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function dispatch(Command $command): void

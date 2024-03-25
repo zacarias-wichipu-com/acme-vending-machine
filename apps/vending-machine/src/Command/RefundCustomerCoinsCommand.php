@@ -51,9 +51,14 @@ final class RefundCustomerCoinsCommand extends Command
             return Command::SUCCESS;
         }
         $io->text([
-            sprintf('<fg=bright-green>-->--> Amount refunded %1$s (coins: %2$s).</>',
-                CurrencyUtils::toDecimalString($refundedAmount), implode(', ',
-                    $refundedCoins)),
+            sprintf(
+                '<fg=bright-green>-->--> Amount refunded %1$s (coins: %2$s).</>',
+                CurrencyUtils::toDecimalString($refundedAmount),
+                implode(
+                    ', ',
+                    $refundedCoins
+                )
+            ),
         ]);
         $printInput = new ArrayInput([
             'command' => 'machine:print',
