@@ -11,6 +11,7 @@ use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use Exception;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
 
@@ -21,12 +22,16 @@ final readonly class BuyProductCommandHandler implements CommandHandler
         private MessageBusInterface $eventBus
     ) {}
 
+    /**
+     * @throws Exception
+     */
     public function __invoke(BuyProductCommand $command): void
     {
         $vendingMachine = $this->repository->get();
         $this->ensureCaseFrom(vendingMachine: $vendingMachine);
         $product = $this->productFrom(product: $command->product);
         $vendingMachine->buyProduct(product: $product);
+        $this->repository->save($vendingMachine);
     }
 
     private function ensureCaseFrom(VendingMachine $vendingMachine): void

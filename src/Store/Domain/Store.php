@@ -6,9 +6,10 @@ namespace Acme\Store\Domain;
 
 use Acme\Product\Domain\Exception\InvalidProductException;
 use Acme\Product\Domain\ProductType;
+use Acme\Store\Domain\Exception\InsufficientStockException;
 use Exception;
 
-final readonly class Store
+final class Store
 {
     /**
      * @template  T  of  Racks
@@ -49,5 +50,22 @@ final readonly class Store
             }
         }
         throw new InvalidProductException(message: sprintf('There has been an error, we are unable to deliver the product %1$s (error: product price unknown).', $product->value));
+    }
+
+    public function updateOnBuy(ProductType $product): void
+    {
+        $racks = (array) $this->racks()->getIterator();
+        /** @var Rack $rack */
+        foreach ($racks as $index => $rack) {
+            if ($rack->product()->type() === $product) {
+                unset($racks[$index]);
+                if ($rack->quantity() > 1) {
+                    $racks[] = Rack::create($rack->product(), $rack->price(), $rack->price() - 1);
+                    $this->racks = Racks::create($racks);
+                }
+                return;
+            }
+        }
+        throw new InsufficientStockException(message: sprintf('There has been an error, the requested product %1$s is not available.', $product->value));
     }
 }

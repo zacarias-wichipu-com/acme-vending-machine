@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Acme\Wallet\Domain;
 
 use Acme\Coin\Domain\Coin;
+use Acme\Shared\Domain\CurrencyUtils;
+use Acme\Wallet\Domain\Exception\InsufficientAmountException;
+use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
 
 final class Wallet
 {
@@ -73,4 +76,40 @@ final class Wallet
         return $coinBoxes;
     }
 
+    public function updateOnBuy(string $productName, int $productPrice): void
+    {
+        $customerAmount = $this->customerAmount();
+        $exchangeAmount = $customerAmount - $productPrice;
+        if (0 > $exchangeAmount) {
+            throw new InsufficientAmountException(
+                message: sprintf(
+                    'The balance %1$s is insufficient for product %2$s, please add %3$s more to complete the amount.',
+                    CurrencyUtils::toDecimalString($customerAmount),
+                    $productName,
+                    CurrencyUtils::toDecimalString($productPrice - $customerAmount),
+                )
+            );
+        }
+        $flatExchange = $this->exchangeCoins()->flatCoins();
+        $flatAvailableExchange = $flatExchange;
+        $flatCustomerExchange = [];
+        foreach ($flatAvailableExchange as $index => $coins) {
+            $coinAmount = array_key_first($coins);
+            $availableCoinQuantity = $coins[$coinAmount];
+            if ($exchangeAmount >= $coinAmount) {
+                $customerCoinQuantity = min($availableCoinQuantity, intdiv($exchangeAmount, $coinAmount));
+                $availableCoinQuantity -= $customerCoinQuantity;
+                $exchangeAmount -= $customerCoinQuantity * $coinAmount;
+                unset($flatAvailableExchange[$index]);
+                $flatAvailableExchange[] = [$coinAmount => $availableCoinQuantity];
+                $flatCustomerExchange[] = [$coinAmount => $customerCoinQuantity];
+            }
+        }
+        if ($exchangeAmount > 0) {
+            throw new InsufficientExchangeException(
+                message: 'We do not have enough exchange, you can select another product or request a refund of the coins.'
+            );
+        }
+
+    }
 }
