@@ -12,6 +12,7 @@ use Acme\VendingMachine\Application\Buy\BuyProductCommand;
 use Acme\VendingMachine\Application\Buy\BuyProductCommandHandler;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Status;
+use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Acme\Wallet\Domain\Exception\InsufficientAmountException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,40 +24,6 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
 {
     private VendingMachineRepository&MockObject $repository;
     private BuyProductCommandHandler $handler;
-
-    public function anInsufficientBalanceVendingMachineState(): \Acme\VendingMachine\Domain\VendingMachine
-    {
-        return VendingMachineMother::randomMachine(
-            status: Status::SELLING,
-            store: VendingMachineMother::randomStore(
-                racks: [
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
-                        quantity: 2,
-                        price: 100
-                    ),
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::WATER),
-                        quantity: 1,
-                        price: 65
-                    ),
-                    VendingMachineMother::randomRack(
-                        product: VendingMachineMother::randomProduct(ProductType::SODA),
-                        quantity: 1,
-                        price: 150
-                    ),
-                ]
-            ),
-            wallet: VendingMachineMother::randomWallet(
-                customerCoins: VendingMachineMother::randomCoins(
-                    coinBoxes: [
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
-                    ]
-                )
-            )
-        );
-    }
 
     protected function setUp(): void
     {
@@ -111,7 +78,7 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
     public function testItShouldThrowAnInsufficientAmountExceptionForInsufficientCustomerBalance(): void
     {
         $this->expectException(InsufficientAmountException::class);
-        $vendingMachine = $this->anInsufficientBalanceVendingMachineState();
+        $vendingMachine = $this->anInsufficientBalanceVendingMachine();
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
@@ -128,5 +95,73 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
+    }
+
+    private function anInsufficientBalanceVendingMachine(): VendingMachine
+    {
+        return VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            store: VendingMachineMother::randomStore(
+                racks: [
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
+                        quantity: 2,
+                        price: 100
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::WATER),
+                        quantity: 1,
+                        price: 65
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::SODA),
+                        quantity: 1,
+                        price: 150
+                    ),
+                ]
+            ),
+            wallet: VendingMachineMother::randomWallet(
+                customerCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
+                    ]
+                )
+            )
+        );
+    }
+
+    private function anInsufficientExchangeVendingMachineForBuyWater(): VendingMachine
+    {
+        return VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            store: VendingMachineMother::randomStore(
+                racks: [
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
+                        quantity: 2,
+                        price: 100
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::WATER),
+                        quantity: 1,
+                        price: 65
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::SODA),
+                        quantity: 1,
+                        price: 150
+                    ),
+                ]
+            ),
+            wallet: VendingMachineMother::randomWallet(
+                customerCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
+                    ]
+                )
+            )
+        );
     }
 }
