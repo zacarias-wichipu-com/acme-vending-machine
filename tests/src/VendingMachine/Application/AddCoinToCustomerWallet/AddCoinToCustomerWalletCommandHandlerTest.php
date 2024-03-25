@@ -8,6 +8,8 @@ use Acme\Coin\Domain\AmountInCents;
 use Acme\Coin\Domain\Exception\InvalidCoinException;
 use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommand;
 use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommandHandler;
+use Acme\VendingMachine\Domain\Exception\InServiceException;
+use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,6 +32,27 @@ class AddCoinToCustomerWalletCommandHandlerTest extends TestCase
             repository: $this->repository,
             eventBus: new InMemoryEventBus()
         );
+    }
+
+    /**
+     * It Should Throw A In Service Exception When The Vending Machine Is In Service
+     *
+     * @group add_coin_to_customer_wallet_command_handler
+     * @group unit
+     */
+    public function testItShouldThrowAInServiceExceptionWhenTheVendingMachineIsInService(): void
+    {
+        $this->expectException(InServiceException::class);
+        $vendingMachine = VendingMachineMother::randomMachine(
+            status: Status::IN_SERVICE,
+            wallet: VendingMachineMother::randomWallet(
+                exchangeCoins: VendingMachineMother::randomCoins(),
+                customerCoins: VendingMachineMother::randomCoins(),
+            )
+        );
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(command: new AddCoinToCustomerWalletCommand(amount: 20));
     }
 
     /**

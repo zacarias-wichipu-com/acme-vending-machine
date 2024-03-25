@@ -21,7 +21,7 @@ final readonly class RefundCustomerWalletCommandHandler implements CommandHandle
     public function __invoke(RefundCustomerWalletCommand $command): void
     {
         $vendingMachine = $this->repository->get();
-        $this->ensureRefund($vendingMachine);
+        $this->ensureCaseFrom($vendingMachine);
         $vendingMachine->refundCustomerCoins();
         $this->repository->save(vendingMachine: $vendingMachine);
         foreach ($vendingMachine->pullDomainEvents() as $domainEvent) {
@@ -29,7 +29,7 @@ final readonly class RefundCustomerWalletCommandHandler implements CommandHandle
         }
     }
 
-    private function ensureRefund(VendingMachine $vendingMachine): void
+    private function ensureCaseFrom(VendingMachine $vendingMachine): void
     {
         if ($vendingMachine->status() !== Status::SELLING) {
             throw new NotServiceAvailableException(message: 'Not service to refund.');
