@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Acme\VendingMachine\Application\Buy;
 
+use Acme\Product\Domain\Exception\InvalidProductException;
 use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Bus\Command\CommandHandler;
 use Acme\VendingMachine\Application\Buy\BuyProductCommand;
 use Acme\VendingMachine\Application\Buy\BuyProductCommandHandler;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
+use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,5 +44,25 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
+    }
+
+    /**
+     * It Should Throw An Invalid Product Exception For Invalid Products
+     *
+     * @group buy_product_command_handler
+     * @group unit
+     */
+    public function testItShouldThrowAnInvalidProductExceptionForInvalidProducts(): void
+    {
+        $this->expectException(InvalidProductException::class);
+        $vendingMachine = VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            wallet: VendingMachineMother::randomWallet(
+                customerCoins: VendingMachineMother::randomCoins()
+            )
+        );
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->never())->method('save')->with($vendingMachine);
+        ($this->handler)(new BuyProductCommand(product: 'wrong product'));
     }
 }

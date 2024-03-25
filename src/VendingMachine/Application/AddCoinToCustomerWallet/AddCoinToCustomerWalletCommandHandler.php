@@ -26,7 +26,7 @@ final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHan
     {
         $vendingMachine = $this->repository->get();
         $this->ensureCaseFrom($vendingMachine);
-        $amountInCents = $this->amountInCents($command->amount);
+        $amountInCents = $this->amountInCentsFrom($command->amount);
         $vendingMachine->addCustomerCoin(
             coin: Coin::createFromAmountInCents(amountInCents: $amountInCents)
         );
@@ -43,7 +43,7 @@ final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHan
         }
     }
 
-    private function amountInCents(int $amount): AmountInCents
+    private function amountInCentsFrom(int $amount): AmountInCents
     {
         try {
             return AmountInCents::from($amount);
