@@ -157,18 +157,17 @@ ecs-fix: ## 🖋️ Fix code standards with ecs (make ecs ECS_OPTIONS="--help")
 shell-php: ## 💻 php container shell
 	@docker exec -it php sh
 
-.PHONY: vending-machine
-vending-machine: ## 🎰 Vending machine
+.PHONY: vm
+vm: ## 🎰 Vending machine
 
-.PHONY: vending-machine-init
-vending-machine-init: VENDING_MACHINE_COMMAND=machine\:init ## Init vending machine
+.PHONY: vm-init
+vm-init: VENDING_MACHINE_COMMAND=machine\:init ## Init vending machine
 
-.PHONY: vending-machine-print
-vending-machine-print: VENDING_MACHINE_COMMAND=machine\:print ## Print vending machine
+.PHONY: vm-print
+vm-print: VENDING_MACHINE_COMMAND=machine\:print ## Print vending machine
 
-.PHONY: vending-machine-add-coin
-vending-machine-add-coin: VENDING_MACHINE_COMMAND=coin\:add ## Add coin
+.PHONY: vm-customer-add-coin
+vm-customer-add-coin: VENDING_MACHINE_COMMAND=customer\:coin\:add ## Customer add a coin
 
-vending-machine vending-machine-init vending-machine-print vending-machine-add-coin:
-	@echo "${INFO_PROMPT_INIT}Executing vending machine ${VENDING_MACHINE_COMMAND}...${INFO_PROMPT_END}"
+vm vm-init vm-print vm-customer-add-coin:
 	@docker exec -it php bin/vending-machine ${VENDING_MACHINE_COMMAND}

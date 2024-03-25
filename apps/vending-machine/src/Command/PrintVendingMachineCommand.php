@@ -25,9 +25,12 @@ final class PrintVendingMachineCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+        $io->text([
+            '<fg=bright-magenta>--> Print vending machine.</>'
+        ]);
         /** @var VendingMachineResponse $vendingMachine */
         $vendingMachine = $this->bus->ask(new GetVendingMachineQuery());
-        $io = new SymfonyStyle($input, $output);
         $io->text([
             sprintf('<fg=blue>Machine status</>: %1$s', $vendingMachine->status()),
             sprintf('<fg=blue>Exchange amount</>: %1$s', CurrencyUtils::toDecimalString($vendingMachine->exchangeAmount())),
@@ -68,7 +71,7 @@ final class PrintVendingMachineCommand extends Command
                 '<fg=white>Quantity</>',
             ],
             rows: array_map(
-                callback: static fn($coin): array => [$coin['coin'], $coin['quantity']],
+                callback: static fn($coin): array => [CurrencyUtils::toDecimalString($coin['coin']), $coin['quantity']],
                 array: $vendingMachine->customerCoins()
             )
         );

@@ -20,8 +20,9 @@ final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHan
     public function __invoke(AddCoinToCustomerWalletCommand $command): void
     {
         $vendingMachine = $this->repository->get();
+        $amountInCents = $this->amountInCents($command->amount);
         $vendingMachine->addCustomerCoin(
-            coin: Coin::createFromAmountInCents(amountInCents: $this->amountInCents($command->amount))
+            coin: Coin::createFromAmountInCents(amountInCents: $amountInCents)
         );
         $this->repository->save($vendingMachine);
     }

@@ -52,16 +52,16 @@ final class Wallet
     public function addCustomerCoin(Coin $coin): void
     {
         $updatedCoins = $this->addCoin($this->customerCoins, $coin);
-        $this->customerCoins = Coins::create($updatedCoins);
+        $this->customerCoins = Coins::create(array_values($updatedCoins));
     }
 
     private function addCoin(Coins $coins, Coin $coin): array
     {
         $totalCoinsFromAmount = $coins->countFromCoinAmount($coin->amountInCents());
         $coinBoxes = (array) $coins->getIterator();
-        foreach ($coinBoxes as $coinBox) {
+        foreach ($coinBoxes as $index => $coinBox) {
             if ($coinBox->coin()->amountInCents() === $coin->amountInCents()) {
-                unset($coinBox);
+                unset($coinBoxes[$index]);
             }
         }
         $coinBoxes[] = CoinBox::create($coin, ++$totalCoinsFromAmount);
