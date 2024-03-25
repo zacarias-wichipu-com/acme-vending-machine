@@ -53,7 +53,14 @@ final class VendingMachine extends AggregateRoot
         $this->status = Status::IN_SERVICE;
     }
 
-    public function setInService() {}
+    public function putOperational()
+    {
+        if ($this->status === Status::OPERATIONAL) {
+            return;
+        }
+        $this->status = Status::OPERATIONAL;
+    }
+
     public function store(): Store
     {
         return $this->store;
@@ -63,11 +70,11 @@ final class VendingMachine extends AggregateRoot
     {
         return $this->wallet;
     }
-
     public function exchangeAmount(): int
     {
         return $this->wallet->exchangeAmount();
     }
+
     public function customerAmount(): int
     {
         return $this->wallet->customerAmount();

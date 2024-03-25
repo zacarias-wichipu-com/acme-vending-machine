@@ -9,11 +9,13 @@ use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
 use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class RefundCustomerWalletCommandHandler implements CommandHandler
 {
     public function __construct(
-        private VendingMachineRepository $repository
+        private VendingMachineRepository $repository,
+        private MessageBusInterface $eventBus
     ) {}
 
     public function __invoke(RefundCustomerWalletCommand $command): void
@@ -22,6 +24,9 @@ final readonly class RefundCustomerWalletCommandHandler implements CommandHandle
         $this->ensureRefund($vendingMachine);
         $vendingMachine->refundCustomerCoins();
         $this->repository->save(vendingMachine: $vendingMachine);
+        foreach ($vendingMachine->pullDomainEvents() as $domainEvent) {
+            $this->eventBus->dispatch($domainEvent);
+        }
     }
 
     private function ensureRefund(VendingMachine $vendingMachine): void

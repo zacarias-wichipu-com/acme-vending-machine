@@ -169,5 +169,8 @@ vm-print: VENDING_MACHINE_COMMAND=machine\:print ## Print vending machine
 .PHONY: vm-customer-add-coin
 vm-customer-add-coin: VENDING_MACHINE_COMMAND=customer\:coin\:add ## Customer add a coin
 
-vm vm-init vm-print vm-customer-add-coin:
+.PHONY: vm-customer-refund-coins
+vm-customer-refund-coins: VENDING_MACHINE_COMMAND=customer\:coins\:refund ## Refund customer coins
+
+vm vm-init vm-print vm-customer-add-coin vm-customer-refund-coins:
 	@docker exec -it php bin/vending-machine ${VENDING_MACHINE_COMMAND}

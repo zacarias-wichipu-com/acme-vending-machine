@@ -11,6 +11,7 @@ use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Tests\Acme\Shared\Infrastructure\Bus\Event\InMemoryEventBus;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class RefundCustomerWalletCommandHandlerTest extends TestCase
@@ -21,7 +22,10 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
-        $this->handler = new RefundCustomerWalletCommandHandler(repository: $this->repository);
+        $this->handler = new RefundCustomerWalletCommandHandler(
+            repository: $this->repository,
+            eventBus: new InMemoryEventBus(),
+        );
     }
 
     /**
