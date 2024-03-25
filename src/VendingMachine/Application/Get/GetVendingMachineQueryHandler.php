@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Acme\VendingMachine\Application;
+namespace Acme\VendingMachine\Application\Get;
 
 use Acme\Shared\Domain\Bus\Query\Query;
 use Acme\Shared\Domain\Bus\Query\QueryHandler;
 use Acme\Shared\Domain\Bus\Query\Response;
+use Acme\VendingMachine\Application\VendingMachineResponse;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 
 final readonly class GetVendingMachineQueryHandler implements QueryHandler

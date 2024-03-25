@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\VendingMachine\Application;
+namespace Acme\VendingMachine\Application\Get;
 
 use Acme\Shared\Domain\Bus\Query\Query;
 

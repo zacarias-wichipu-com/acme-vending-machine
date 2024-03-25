@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Acme\VendingMachine\Domain;
 
 use Acme\Coin\Domain\Coin;
-use Acme\Coin\Domain\CustomerHasInsertACoinEvent;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
+use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
 use Acme\Wallet\Domain\Wallet;
 
 final class VendingMachine extends AggregateRoot

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\Coin\Domain;
+namespace Acme\VendingMachine\Domain\Event;
 
 use Acme\Shared\Domain\Bus\Event\DomainEvent;
 

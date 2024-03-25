@@ -7,7 +7,7 @@ namespace Acme\Ui\Cli\Command;
 use Acme\Coin\Domain\AmountInCents;
 use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
-use Acme\VendingMachine\Application\AddCoinToCustomerWalletCommand;
+use Acme\VendingMachine\Application\AddCoinToCustomerWallet\AddCoinToCustomerWalletCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;

@@ -6,7 +6,7 @@ namespace Acme\Ui\Cli\Command;
 
 use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
-use Acme\VendingMachine\Application\GetVendingMachineQuery;
+use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\VendingMachineResponse;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

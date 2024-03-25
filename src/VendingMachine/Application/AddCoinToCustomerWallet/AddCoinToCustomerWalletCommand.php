@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Acme\VendingMachine\Application;
+namespace Acme\VendingMachine\Application\AddCoinToCustomerWallet;
 
 use Acme\Shared\Domain\Bus\Command\Command;
 

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Acme\VendingMachine\Application;
+namespace Tests\Acme\VendingMachine\Application\Create;
 
-use Acme\VendingMachine\Application\CreateVendingMachineCommand;
-use Acme\VendingMachine\Application\CreateVendingMachineCommandHandler;
+use Acme\VendingMachine\Application\Create\CreateVendingMachineCommandHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
@@ -23,6 +22,6 @@ class CreateVendingMachineCommandHandlerTest extends TestCase
         $repository = $this->createMock(VendingMachineRepository::class);
         $repository->expects($this->once())->method('save')->with(VendingMachineMother::defaultMachine());
         $handler = new CreateVendingMachineCommandHandler(repository: $repository);
-        ($handler)(command: new CreateVendingMachineCommand());
+        ($handler)(command: new \Acme\VendingMachine\Application\Create\CreateVendingMachineCommand());
     }
 }

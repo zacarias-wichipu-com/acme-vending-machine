@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Acme\VendingMachine\Application;
+namespace Tests\Acme\VendingMachine\Application\Get;
 
 use Acme\Shared\Domain\Bus\Query\Query;
 use Acme\Shared\Domain\Bus\Query\QueryHandler;
 use Acme\Shared\Domain\Bus\Query\Response;
-use Acme\VendingMachine\Application\GetVendingMachineQuery;
-use Acme\VendingMachine\Application\GetVendingMachineQueryHandler;
+use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
+use Acme\VendingMachine\Application\Get\GetVendingMachineQueryHandler;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
