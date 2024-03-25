@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Acme\VendingMachine\Domain;
 
 use Acme\Coin\Domain\Coin;
+use Acme\Coin\Domain\CustomerHasInsertACoinEvent;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
 use Acme\Wallet\Domain\Wallet;
@@ -64,5 +65,10 @@ final class VendingMachine extends AggregateRoot
     public function addCustomerCoin(Coin $coin): void
     {
         $this->wallet->addCustomerCoin(coin: $coin);
+        $this->record(
+            domainEvent: new CustomerHasInsertACoinEvent(
+                cointAmount: $coin->amount()
+            )
+        );
     }
 }
