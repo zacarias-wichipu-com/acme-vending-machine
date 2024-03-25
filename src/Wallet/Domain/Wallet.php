@@ -55,6 +55,11 @@ final class Wallet
         $this->customerCoins = Coins::create(array_values($updatedCoins));
     }
 
+    public function refundCustomerCoins(): void
+    {
+        $this->customerCoins = Coins::create([]);
+    }
+
     private function addCoin(Coins $coins, Coin $coin): array
     {
         $totalCoinsFromAmount = $coins->countFromCoinAmount($coin->amountInCents());

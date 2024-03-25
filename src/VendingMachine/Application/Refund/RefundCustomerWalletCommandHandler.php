@@ -14,13 +14,14 @@ final readonly class RefundCustomerWalletCommandHandler implements CommandHandle
 {
     public function __construct(
         private VendingMachineRepository $repository
-    ) {
-    }
+    ) {}
 
     public function __invoke(RefundCustomerWalletCommand $command): void
     {
         $vendingMachine = $this->repository->get();
         $this->ensureRefund($vendingMachine);
+        $vendingMachine->refundCustomerCoins();
+        $this->repository->save(vendingMachine: $vendingMachine);
     }
 
     private function ensureRefund(VendingMachine $vendingMachine): void

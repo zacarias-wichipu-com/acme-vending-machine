@@ -6,10 +6,10 @@ namespace Acme\VendingMachine\Domain\Event;
 
 use Acme\Shared\Domain\Bus\Event\DomainEvent;
 
-final class CustomerHasInsertACoinEvent extends DomainEvent
+final class CustomerCoinsWasRefundedEvent extends DomainEvent
 {
     public function __construct(
-        private readonly int $coinAmount,
+        private readonly int $coinsAmount,
         string $eventId = null,
         string $occurredOn = null
     ) {
@@ -19,12 +19,12 @@ final class CustomerHasInsertACoinEvent extends DomainEvent
     #[\Override]
     public static function eventName(): string
     {
-        return 'customer.coin.add';
+        return 'customer.coins.refund';
     }
 
     public function coinAmount(): int
     {
-        return $this->coinAmount;
+        return $this->coinsAmount;
     }
 
     #[\Override]
@@ -34,7 +34,7 @@ final class CustomerHasInsertACoinEvent extends DomainEvent
         string $occurredOn
     ): DomainEvent {
         return new static(
-            $body['coinAmount'],
+            $body['coinsAmount'],
             $eventId,
             $occurredOn
         );
@@ -44,7 +44,7 @@ final class CustomerHasInsertACoinEvent extends DomainEvent
     public function toPrimitives(): array
     {
         return [
-            'coinAmount' => $this->coinAmount,
+            'coinsAmount' => $this->coinsAmount,
         ];
     }
 }

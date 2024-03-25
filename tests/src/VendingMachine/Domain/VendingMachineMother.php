@@ -25,12 +25,15 @@ final class VendingMachineMother
         return VendingMachine::createDefault();
     }
 
-    public static function randomMachine(): VendingMachine
-    {
+    public static function randomMachine(
+        ?Status $status = null,
+        ?Store $store = null,
+        ?Wallet $wallet = null,
+    ): VendingMachine {
         return VendingMachine::create(
-            status: static::randomStatus(),
-            store: static::randomStore(),
-            wallet: static::randomWallet(),
+            status: $status ?: static::randomStatus(),
+            store: $store ?: static::randomStore(),
+            wallet: $wallet ?: static::randomWallet(),
         );
     }
 
@@ -70,28 +73,40 @@ final class VendingMachineMother
         return ProductType::from($randomProductType->value);
     }
 
-    private static function randomWallet(): Wallet
-    {
+    public static function randomWallet(
+        ?Coins $exchangeCoins = null,
+        ?Coins $customerCoins = null,
+    ): Wallet {
         return Wallet::create(
-            exchangeCoins: Coins::create([
-                CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::FIVE),
-                    MotherCreator::random()->numberBetween(1, 10)
-                ),
-                CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::TEN),
-                    MotherCreator::random()->numberBetween(1, 10)
-                ),
-                CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::TWENTY_FIVE),
-                    MotherCreator::random()->numberBetween(1, 10)
-                ),
-                CoinBox::create(
-                    Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED),
-                    MotherCreator::random()->numberBetween(1, 10)
-                ),
-            ]),
-            customerCoins: Coins::create([])
+            exchangeCoins: $exchangeCoins ?: self::randomCoins(),
+            customerCoins: $customerCoins ?: self::noCoins()
         );
+    }
+
+    public static function randomCoins(): Coins
+    {
+        return Coins::create([
+            CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::FIVE),
+                MotherCreator::random()->numberBetween(1, 10)
+            ),
+            CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::TEN),
+                MotherCreator::random()->numberBetween(1, 10)
+            ),
+            CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::TWENTY_FIVE),
+                MotherCreator::random()->numberBetween(1, 10)
+            ),
+            CoinBox::create(
+                Coin::createFromAmountInCents(AmountInCents::ONE_HUNDRED),
+                MotherCreator::random()->numberBetween(1, 10)
+            ),
+        ]);
+    }
+
+    private static function noCoins(): Coins
+    {
+        return Coins::create([]);
     }
 }

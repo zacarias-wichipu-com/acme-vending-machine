@@ -7,6 +7,7 @@ namespace Acme\VendingMachine\Domain;
 use Acme\Coin\Domain\Coin;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
+use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
 use Acme\Wallet\Domain\Wallet;
 
@@ -52,10 +53,7 @@ final class VendingMachine extends AggregateRoot
         $this->status = Status::IN_SERVICE;
     }
 
-    public function setInService()
-    {
-        
-    }
+    public function setInService() {}
     public function store(): Store
     {
         return $this->store;
@@ -80,8 +78,17 @@ final class VendingMachine extends AggregateRoot
         $this->wallet->addCustomerCoin(coin: $coin);
         $this->record(
             domainEvent: new CustomerHasInsertACoinEvent(
-                cointAmount: $coin->amount()
+                coinAmount: $coin->amount()
             )
         );
+    }
+
+    public function refundCustomerCoins()
+    {
+        $coinsAmount = $this->customerAmount();
+        $this->wallet()->refundCustomerCoins();
+        $this->record(domainEvent: new CustomerCoinsWasRefundedEvent(
+            coinsAmount: $coinsAmount
+        ));
     }
 }

@@ -7,6 +7,7 @@ namespace Tests\Acme\VendingMachine\Application\Refund;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommand;
 use Acme\VendingMachine\Application\Refund\RefundCustomerWalletCommandHandler;
 use Acme\VendingMachine\Domain\Exception\NotServiceAvailableException;
+use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,5 +37,27 @@ class RefundCustomerWalletCommandHandlerTest extends TestCase
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new RefundCustomerWalletCommand());
+    }
+
+    /**
+     * It Should Be Able To Refund Customer Coins
+     *
+     * @group refund_customer_wallet_command_handler
+     * @group unit
+     */
+    public function testItShouldBeAbleToRefundCustomerCoins(): void
+    {
+        $vendingMachine = VendingMachineMother::randomMachine(
+            status: Status::IN_SERVICE,
+            wallet: VendingMachineMother::randomWallet(
+                exchangeCoins: VendingMachineMother::randomCoins(),
+                customerCoins: VendingMachineMother::randomCoins(),
+            )
+        );
+        $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
+        $this->repository->expects($this->once())->method('save')->with($vendingMachine);
+        $this->assertGreaterThan(expected: 0, actual: $vendingMachine->customerAmount());
+        ($this->handler)(new RefundCustomerWalletCommand());
+        $this->assertEquals(expected: 0, actual: $vendingMachine->customerAmount());
     }
 }

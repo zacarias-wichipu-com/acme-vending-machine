@@ -6,6 +6,4 @@ namespace Acme\VendingMachine\Application\Refund;
 
 use Acme\Shared\Domain\Bus\Command\Command;
 
-final class RefundCustomerWalletCommand implements Command
-{
-}
+final class RefundCustomerWalletCommand implements Command {}
