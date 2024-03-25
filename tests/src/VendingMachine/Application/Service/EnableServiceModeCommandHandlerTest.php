@@ -20,7 +20,7 @@ class EnableServiceModeCommandHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
+        $this->repository = $this->createMock(VendingMachineRepository::class);
         $this->handler = new EnableServiceModeCommandHandler(
             repository: $this->repository,
         );

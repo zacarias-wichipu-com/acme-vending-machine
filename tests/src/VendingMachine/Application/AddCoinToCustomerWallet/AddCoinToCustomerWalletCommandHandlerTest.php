@@ -27,7 +27,7 @@ class AddCoinToCustomerWalletCommandHandlerTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->repository = $this->createMock(originalClassName: VendingMachineRepository::class);
+        $this->repository = $this->createMock(VendingMachineRepository::class);
         $this->handler = new AddCoinToCustomerWalletCommandHandler(
             repository: $this->repository,
             eventBus: new InMemoryEventBus()
