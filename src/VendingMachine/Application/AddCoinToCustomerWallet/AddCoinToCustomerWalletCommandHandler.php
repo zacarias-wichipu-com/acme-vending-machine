@@ -39,7 +39,7 @@ final readonly class AddCoinToCustomerWalletCommandHandler implements CommandHan
     private function ensureCaseFrom(VendingMachine $vendingMachine): void
     {
         if ($vendingMachine->status() === Status::IN_SERVICE) {
-            throw new InServiceException(message: 'No coins can be inserted while the machine is in service');
+            throw new InServiceException(message: 'No coins can be inserted while the machine is in service.');
         }
     }
 
