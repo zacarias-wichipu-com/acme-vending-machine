@@ -37,6 +37,26 @@ final class VendingMachineMother
         );
     }
 
+    public static function randomRacks(): array
+    {
+        return [
+            self::randomRack(),
+        ];
+    }
+
+    public static function randomRack(
+        ?Product $product = null,
+        ?int $price = null,
+        ?int $quantity = null,
+    ): Rack
+    {
+        return Rack::create(
+            product: $product ?: static::randomProduct(),
+            price: $price ?: MotherCreator::random()->numberBetween(1, 1000),
+            quantity: $quantity ?: MotherCreator::random()->numberBetween(1, 5),
+        );
+    }
+
     private static function randomStatus(): Status
     {
         $randomStatusCases = MotherCreator::random()->shuffleArray(Status::cases());
@@ -45,24 +65,18 @@ final class VendingMachineMother
         return Status::from($randomStatus->value);
     }
 
-    private static function randomStore(): Store
+    public static function randomStore(?array $racks = null): Store
     {
         return Store::create(
             racks: Racks::create(
-                racks: [
-                    Rack::create(
-                        product: static::randomProduct(),
-                        price: MotherCreator::random()->numberBetween(1, 1000),
-                        quantity: MotherCreator::random()->numberBetween(1, 5),
-                    ),
-                ]
+                racks: $racks ?: self::randomRacks()
             )
         );
     }
 
-    private static function randomProduct(): Product
+    public static function randomProduct(?ProductType $productType = null): Product
     {
-        return Product::createFromType(static::randomProductType());
+        return Product::createFromType($productType ?: static::randomProductType());
     }
 
     private static function randomProductType(): ProductType
