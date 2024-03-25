@@ -15,6 +15,7 @@ use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Acme\Wallet\Domain\Exception\InsufficientAmountException;
+use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\Shared\Infrastructure\Bus\Event\InMemoryEventBus;
@@ -92,6 +93,7 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
     public function testItShouldThrowAnInsufficientExchangeExceptionForInsufficientExchange(): void
     {
         $this->expectException(InsufficientExchangeException::class);
+        $vendingMachine = $this->anInsufficientExchangeVendingMachineForBuyWater();
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->never())->method('save')->with($vendingMachine);
         ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
@@ -157,8 +159,7 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
             wallet: VendingMachineMother::randomWallet(
                 customerCoins: VendingMachineMother::randomCoins(
                     coinBoxes: [
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 2),
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 2)
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 1),
                     ]
                 )
             )
