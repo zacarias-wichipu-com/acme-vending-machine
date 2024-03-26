@@ -18,6 +18,11 @@ Create and start Docker containers with all the necessary dependencies.
 make build
 ```
 
+List all available _make_ commands.
+```bash
+make
+```
+
 ### Tests
 
 - Execute the unit tests
