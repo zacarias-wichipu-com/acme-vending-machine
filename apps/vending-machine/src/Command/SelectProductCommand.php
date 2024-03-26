@@ -68,7 +68,7 @@ final class SelectProductCommand extends Command
         $choice = $choicesOptionAllowed[$choiceKey];
         if ($choice === 'Select none') {
             $io->text([
-                '<fg=bright-green>--> --> Select none.</>'
+                '<fg=bright-green>-->--> Select none.</>'
             ]);
             return Command::SUCCESS;
         }
@@ -80,7 +80,9 @@ final class SelectProductCommand extends Command
             ]);
             return Command::SUCCESS;
         }
-
+        $io->text([
+            sprintf('<fg=bright-green>-->--> Delivered %1$s.</>', $choicesValueAllowed[$choiceKey]),
+        ]);
         /** @var VendingMachineResponse $vendingMachineResponse */
         $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
         $refundedAmount = $vendingMachineResponse->refundAmount();
@@ -101,13 +103,7 @@ final class SelectProductCommand extends Command
                 )
             ),
         ]);
-
-    exit();
         $this->bus->dispatch(command: new RefundBuyExchangeCommand());
-
-        $io->text([
-            sprintf('<fg=bright-green>--> --> Inserted a %1$s coin.</>', $choice),
-        ]);
         return Command::SUCCESS;
     }
 }

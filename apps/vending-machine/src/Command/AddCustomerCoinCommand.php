@@ -46,7 +46,7 @@ final class AddCustomerCoinCommand extends Command
         $choice = $choicesAllowed[$choiceKey];
         if ($choice === 'Insert none') {
             $io->text([
-                '<fg=bright-green>--> --> Insert none.</>'
+                '<fg=bright-green>-->--> Insert none.</>'
             ]);
             return Command::SUCCESS;
         }
@@ -59,7 +59,7 @@ final class AddCustomerCoinCommand extends Command
         );
         $this->bus->dispatch(command: new AddCoinToCustomerWalletCommand(amount: $amount));
         $io->text([
-            sprintf('<fg=bright-green>--> --> Inserted a %1$s coin.</>', $choice),
+            sprintf('<fg=bright-green>-->--> Inserted a %1$s coin.</>', $choice),
         ]);
         return Command::SUCCESS;
     }

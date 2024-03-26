@@ -33,7 +33,7 @@ final class InitVendingMachineCommand extends Command
         ]);
         $this->bus->dispatch(new DomainCreateVendingMachineCommand());
         $io->text([
-            '<fg=bright-green>--> --> Vending machine initialised.</>'
+            '<fg=bright-green>-->--> Vending machine initialised.</>'
         ]);
         return Command::SUCCESS;
     }
