@@ -142,7 +142,7 @@ final class Wallet
             array: $flatCustomerExchange,
             callback: static fn(array $a, array $b) => $a[array_key_first($a)] <=> $b[array_key_first($b)],
         );
-        $refundCoinBoxes = array_map(
+        $updatedRefundCoinBoxes = array_map(
             callback: static fn(
                 array $flatCoinBox
             ): CoinBox => CoinBox::create(
@@ -152,7 +152,7 @@ final class Wallet
             array: $flatCustomerExchange
         );
         $this->exchangeCoins = Coins::create(coinBox: array_values($updateExchangeCoinBoxes));
-        $this->refundCoins = Coins::create(coinBox: array_values($refundCoinBoxes));
+        $this->refundCoins = Coins::create(coinBox: array_values($updatedRefundCoinBoxes));
         $this->customerCoins = Coins::create([]);
     }
 

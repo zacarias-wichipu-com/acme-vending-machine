@@ -247,12 +247,12 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
                     ),
                     VendingMachineMother::randomRack(
                         product: VendingMachineMother::randomProduct(ProductType::WATER),
-                        quantity: 4,
+                        quantity: 1,
                         price: 65
                     ),
                     VendingMachineMother::randomRack(
                         product: VendingMachineMother::randomProduct(ProductType::SODA),
-                        quantity: 1,
+                        quantity: 2,
                         price: 150
                     ),
                 ]
@@ -263,7 +263,7 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
                         VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::FIVE, quantity: 10),
                         VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TEN, quantity: 10),
                         VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 10),
-                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 10),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 5),
                     ]
                 ),
                 customerCoins: VendingMachineMother::randomCoins(

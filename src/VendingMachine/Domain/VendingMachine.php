@@ -143,8 +143,8 @@ final class VendingMachine extends AggregateRoot
      */
     public function buyProduct(ProductType $product): void
     {
-        $this->store()->updateOnBuy(product: $product);
         $productPrice = $this->store()->priceFrom(product: $product);
+        $this->store()->updateOnBuy(product: $product);
         $this->wallet()->updateOnBuy(productName: $product->value, productPrice: $productPrice);
     }
 

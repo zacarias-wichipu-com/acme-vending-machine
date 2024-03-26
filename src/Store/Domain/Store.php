@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Acme\Store\Domain;
 
-use Acme\Product\Domain\Exception\InvalidProductException;
 use Acme\Product\Domain\ProductType;
 use Acme\Store\Domain\Exception\InsufficientStockException;
 use Exception;
@@ -49,7 +48,7 @@ final class Store
                 return $rack->price();
             }
         }
-        throw new InvalidProductException(message: sprintf('There has been an error, we are unable to deliver the product %1$s (error: product price unknown).', $product->value));
+        return 0;
     }
 
     public function updateOnBuy(ProductType $product): void
@@ -61,8 +60,8 @@ final class Store
                 unset($racks[$index]);
                 if ($rack->quantity() > 1) {
                     $racks[] = Rack::create($rack->product(), $rack->price(), $rack->quantity() - 1);
-                    $this->racks = Racks::create(array_values($racks));
                 }
+                $this->racks = Racks::create(array_values($racks));
                 return;
             }
         }
