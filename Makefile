@@ -89,7 +89,7 @@ i-tests: composer-env-file ## ✅  Integration tests
 
 .PHONY: a-tests
 a-tests: composer-env-file ## ✅  Application tests
-	@echo "${INFO_PROMPT_INIT}Run integration tests...${INFO_PROMPT_END}"
+	@echo "${INFO_PROMPT_INIT}Run application tests...${INFO_PROMPT_END}"
 	@docker exec php ./vendor/bin/phpunit --colors=always --group application
 
 .PHONY: tests
