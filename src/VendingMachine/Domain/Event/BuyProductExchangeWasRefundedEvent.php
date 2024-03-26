@@ -6,11 +6,9 @@ namespace Acme\VendingMachine\Domain\Event;
 
 use Acme\Shared\Domain\Bus\Event\DomainEvent;
 
-final class ProductWasSoldEvent extends DomainEvent
+final class BuyProductExchangeWasRefundedEvent extends DomainEvent
 {
     public function __construct(
-        private readonly string $productName,
-        private readonly int $productPrice,
         string $eventId = null,
         string $occurredOn = null
     ) {
@@ -20,17 +18,7 @@ final class ProductWasSoldEvent extends DomainEvent
     #[\Override]
     public static function eventName(): string
     {
-        return 'product.sold';
-    }
-
-    public function productName(): string
-    {
-        return $this->productName;
-    }
-
-    public function productPrice(): int
-    {
-        return $this->productPrice;
+        return 'wallet.redund.exchange';
     }
 
     #[\Override]
@@ -40,8 +28,6 @@ final class ProductWasSoldEvent extends DomainEvent
         string $occurredOn
     ): DomainEvent {
         return new static(
-            $body['productName'],
-            $body['productPrice'],
             $eventId,
             $occurredOn
         );
@@ -50,9 +36,6 @@ final class ProductWasSoldEvent extends DomainEvent
     #[\Override]
     public function toPrimitives(): array
     {
-        return [
-            'productName' => $this->productName,
-            'productPrice' => $this->productPrice,
-        ];
+        return [];
     }
 }

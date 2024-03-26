@@ -12,14 +12,12 @@ use Acme\VendingMachine\Domain\Status;
 use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Exception;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
 
 final readonly class BuyProductCommandHandler implements CommandHandler
 {
     public function __construct(
         private VendingMachineRepository $repository,
-        private MessageBusInterface $eventBus
     ) {}
 
     /**
@@ -32,9 +30,6 @@ final readonly class BuyProductCommandHandler implements CommandHandler
         $product = $this->productFrom(product: $command->product);
         $vendingMachine->buyProduct(product: $product);
         $this->repository->save($vendingMachine);
-        foreach ($vendingMachine->pullDomainEvents() as $domainEvent) {
-            $this->eventBus->dispatch($domainEvent);
-        }
     }
 
     private function ensureCaseFrom(VendingMachine $vendingMachine): void

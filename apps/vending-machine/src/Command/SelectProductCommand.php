@@ -7,6 +7,7 @@ namespace Acme\Ui\Cli\Command;
 use Acme\Shared\Domain\CurrencyUtils;
 use Acme\Shared\Infrastructure\Symfony\Console\Command\BusCommand;
 use Acme\VendingMachine\Application\Buy\BuyProductCommand;
+use Acme\VendingMachine\Application\Buy\RefundBuyExchangeCommand;
 use Acme\VendingMachine\Application\Get\GetVendingMachineQuery;
 use Acme\VendingMachine\Application\VendingMachineResponse;
 use DomainException;
@@ -33,11 +34,11 @@ final class SelectProductCommand extends Command
         $io->text([
             '<fg=bright-magenta>--> Selecting product to buy.</>',
         ]);
-        /** @var VendingMachineResponse $vendingMachine */
-        $vendingMachine = $this->bus->ask(new GetVendingMachineQuery());
+        /** @var VendingMachineResponse $vendingMachineResponse */
+        $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
         $choicesOptionAllowed = array_map(
             callback: static fn(array $rack): string => sprintf('%1$s (price: %2$s, stock: %3$d)', $rack['product'], CurrencyUtils::toDecimalString($rack['price']), $rack['quantity']),
-            array: $vendingMachine->store(),
+            array: $vendingMachineResponse->store(),
         );
         $choicesOptionAllowed[] = 'Select none';
         $choicesOptionAllowed = array_combine(
@@ -50,7 +51,7 @@ final class SelectProductCommand extends Command
         );
         $choicesValueAllowed = array_map(
             callback: static fn(array $rack): string => $rack['product'],
-            array: $vendingMachine->store(),
+            array: $vendingMachineResponse->store(),
         );
         $choicesValueAllowed = array_combine(
             keys: array_slice(
@@ -79,6 +80,31 @@ final class SelectProductCommand extends Command
             ]);
             return Command::SUCCESS;
         }
+
+        /** @var VendingMachineResponse $vendingMachineResponse */
+        $vendingMachineResponse = $this->bus->ask(new GetVendingMachineQuery());
+        $refundedAmount = $vendingMachineResponse->refundAmount();
+        $refundedCoins = array_reduce(
+            array: $vendingMachineResponse->refundCoins(),
+            callback: static fn(array $carry, array $coins): array => [
+                ...$carry, ...array_fill(0, $coins['quantity'], CurrencyUtils::toDecimalString($coins['coin'])),
+            ],
+            initial: []
+        );
+        $io->text([
+            sprintf(
+                '<fg=bright-green>-->--> Exchange refunded %1$s (coins: %2$s).</>',
+                CurrencyUtils::toDecimalString($refundedAmount),
+                implode(
+                    ', ',
+                    $refundedCoins
+                )
+            ),
+        ]);
+
+    exit();
+        $this->bus->dispatch(command: new RefundBuyExchangeCommand());
+
         $io->text([
             sprintf('<fg=bright-green>--> --> Inserted a %1$s coin.</>', $choice),
         ]);

@@ -40,6 +40,11 @@ final readonly class VendingMachineResponse implements Response
         return $this->vendingMachine->customerAmount();
     }
 
+    public function refundAmount(): int
+    {
+        return $this->vendingMachine->refundAmount();
+    }
+
     public function store(): array
     {
         return array_map(

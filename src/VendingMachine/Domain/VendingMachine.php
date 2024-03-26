@@ -8,9 +8,9 @@ use Acme\Coin\Domain\Coin;
 use Acme\Product\Domain\ProductType;
 use Acme\Shared\Domain\Aggregate\AggregateRoot;
 use Acme\Store\Domain\Store;
+use Acme\VendingMachine\Domain\Event\BuyProductExchangeWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerCoinsWasRefundedEvent;
 use Acme\VendingMachine\Domain\Event\CustomerHasInsertACoinEvent;
-use Acme\VendingMachine\Domain\Event\ProductWasSoldEvent;
 use Acme\VendingMachine\Domain\Exception\NotInSellingModeException;
 use Acme\VendingMachine\Domain\Exception\ServiceModeUnavailable;
 use Acme\Wallet\Domain\Coins;
@@ -107,6 +107,15 @@ final class VendingMachine extends AggregateRoot
         return $this->wallet->customerCoins();
     }
 
+    public function refundAmount(): int
+    {
+        return $this->wallet->refundAmount();
+    }
+    public function refundCoins(): Coins
+    {
+        return $this->wallet->refundCoins();
+    }
+
     public function addCustomerCoin(Coin $coin): void
     {
         $this->wallet->addCustomerCoin(coin: $coin);
@@ -137,8 +146,11 @@ final class VendingMachine extends AggregateRoot
         $this->store()->updateOnBuy(product: $product);
         $productPrice = $this->store()->priceFrom(product: $product);
         $this->wallet()->updateOnBuy(productName: $product->value, productPrice: $productPrice);
-        $this->record(
-            domainEvent: new ProductWasSoldEvent(productName: $product->value, productPrice: $productPrice)
-        );
+    }
+
+    public function refundBuyExchange(): void
+    {
+        $this->wallet()->updateOnRefundBuyExchange();
+        $this->record(new BuyProductExchangeWasRefundedEvent());
     }
 }

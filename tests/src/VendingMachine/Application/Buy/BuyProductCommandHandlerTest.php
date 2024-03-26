@@ -19,7 +19,6 @@ use Acme\Wallet\Domain\Exception\InsufficientAmountException;
 use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Tests\Acme\Shared\Infrastructure\Bus\Event\InMemoryEventBus;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
 
 class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
@@ -32,7 +31,6 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
         $this->repository = $this->createMock(VendingMachineRepository::class);
         $this->handler = new BuyProductCommandHandler(
             repository: $this->repository,
-            eventBus: new InMemoryEventBus(),
         );
     }
 

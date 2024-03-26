@@ -16,7 +16,8 @@ final class Wallet
         private Coins $exchangeCoins,
         private Coins $customerCoins,
         private Coins $refundCoins,
-    ) {}
+    ) {
+    }
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins, Coins $refundCoins): static
     {
@@ -153,5 +154,10 @@ final class Wallet
         $this->exchangeCoins = Coins::create(coinBox: array_values($updateExchangeCoinBoxes));
         $this->refundCoins = Coins::create(coinBox: array_values($refundCoinBoxes));
         $this->customerCoins = Coins::create([]);
+    }
+
+    public function updateOnRefundBuyExchange(): void
+    {
+        $this->refundCoins = Coins::create([]);
     }
 }
