@@ -16,8 +16,7 @@ final class Wallet
         private Coins $exchangeCoins,
         private Coins $customerCoins,
         private Coins $refundCoins,
-    ) {
-    }
+    ) {}
 
     public static function create(Coins $exchangeCoins, Coins $customerCoins, Coins $refundCoins): static
     {
@@ -106,6 +105,11 @@ final class Wallet
             );
         }
         $flatExchange = $this->exchangeCoins()->flatCoins();
+        usort(
+            array: $flatExchange,
+            callback: static fn(array $a, array $b) => array_key_first($b) <=> array_key_first($a),
+        );
+
         $flatAvailableExchange = $flatExchange;
         $flatCustomerExchange = [];
         foreach ($flatAvailableExchange as $index => $coins) {

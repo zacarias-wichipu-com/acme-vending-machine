@@ -17,6 +17,7 @@ use Acme\VendingMachine\Domain\VendingMachine;
 use Acme\VendingMachine\Domain\VendingMachineRepository;
 use Acme\Wallet\Domain\Exception\InsufficientAmountException;
 use Acme\Wallet\Domain\Exception\InsufficientExchangeException;
+use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Acme\VendingMachine\Domain\VendingMachineMother;
@@ -116,15 +117,15 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
     /**
      * It Should Sell A Product
      *
+     * @dataProvider successSellingData
      * @group buy_product_command_handler
      * @group unit
      */
-    public function testItShouldSellAProduct(): void
+    public function testItShouldSellAProduct(VendingMachine $vendingMachine, string $product): void
     {
-        $vendingMachine = $this->aSuitableVendingMachineForBuyWater();
         $this->repository->expects($this->once())->method('get')->willReturn($vendingMachine);
         $this->repository->expects($this->once())->method('save')->with($vendingMachine);
-        ($this->handler)(new BuyProductCommand(product: ProductType::WATER->value));
+        ($this->handler)(new BuyProductCommand(product: $product));
     }
 
     private function anInsufficientBalanceVendingMachine(): VendingMachine
@@ -234,7 +235,13 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
         );
     }
 
-    private function aSuitableVendingMachineForBuyWater(): VendingMachine
+    public static function successSellingData(): Generator
+    {
+        yield [self::aSuitableVendingMachineForBuyWater(), ProductType::WATER->value];
+        yield [self::aSuitableVendingMachineWithARefundCornerCase(), ProductType::SODA->value];
+    }
+
+    private static function aSuitableVendingMachineForBuyWater(): VendingMachine
     {
         return VendingMachineMother::randomMachine(
             status: Status::SELLING,
@@ -269,6 +276,41 @@ class BuyProductCommandHandlerTest extends TestCase implements CommandHandler
                 customerCoins: VendingMachineMother::randomCoins(
                     coinBoxes: [
                         VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 1),
+                    ]
+                )
+            )
+        );
+    }
+
+    private static function aSuitableVendingMachineWithARefundCornerCase(): VendingMachine
+    {
+        return VendingMachineMother::randomMachine(
+            status: Status::SELLING,
+            store: VendingMachineMother::randomStore(
+                racks: [
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::JUICE),
+                        quantity: 2,
+                        price: 100
+                    ),
+                    VendingMachineMother::randomRack(
+                        product: VendingMachineMother::randomProduct(ProductType::SODA),
+                        quantity: 2,
+                        price: 150
+                    ),
+                ]
+            ),
+            wallet: VendingMachineMother::randomWallet(
+                exchangeCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TEN, quantity: 3),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::TWENTY_FIVE, quantity: 10),
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 5),
+                    ]
+                ),
+                customerCoins: VendingMachineMother::randomCoins(
+                    coinBoxes: [
+                        VendingMachineMother::coinBoxFrom(amountInCents: AmountInCents::ONE_HUNDRED, quantity: 2),
                     ]
                 )
             )
